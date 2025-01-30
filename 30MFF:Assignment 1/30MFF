@@ -1,0 +1,19 @@
+<html>
+
+</html><head>
+    <title>Shining Star</title>
+  </head>
+
+  <body style="background-color:aliceblue;">
+    <!-- All the content of the webpage -->
+    <h1>The Shining Star</h1>
+    <h3>30 Minutes Movie Festival</h3>
+    <h4>CommLab 2025 Spring</h4>
+
+<!--Video from YouTube-->
+<iframe width="800" height="450" 
+src="https://youtube.com/embed/K5BdJ549cKo">
+</iframe>
+
+</body>
+</html>
