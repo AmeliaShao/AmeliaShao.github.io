@@ -1,0 +1,87 @@
+
+
+
+body {
+  background-color: #071a37;
+}
+
+h1 {
+  color: #f4d03f;
+  text-align: center;
+  font-family: Georgia, Garamond, Arial;
+}
+h3 {
+    color: #f7dc6f;
+    text-align: center;
+    font-family: Georgia, Garamond, Arial;
+  }
+h4 {
+    color: #f7dc6f;
+    text-align: center;
+    font-family: Georgia, Garamond, Arial;    
+  }
+
+p {
+  color: #f9e79f;
+  font-family: Georgia, Garamond, Arial;
+  font-size: 16px; 
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+
+  .image-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Space between images */
+}
+
+.image-item {
+    text-align: center;
+}
+.image-item img {
+    max-width: 100%; /* Ensures responsiveness */
+    height: auto;
+}
+
+.text-container{
+border: 3px solid #f9e79f;
+padding: 30px;
+margin: 100px;
+}
+
+.credit-container{
+  display: flex;
+  justify-content: center;
+  gap:200px;
+}
+
+.credit-item {
+  text-align: center;
+}
+
+.behind-container{
+  display: flex;
+  justify-content: center;
+  gap: 20px; 
+}
+
+.signature{
+  text-align: right;
+}
+
+#star {
+  position: absolute;
+  
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  width: 200px; /* 适当调整大小 */
+  height: auto;
+}
+
+a:visited{color:#f4d03f;}
