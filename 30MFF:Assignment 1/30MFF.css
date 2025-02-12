@@ -1,6 +1,5 @@
 
 
-
 body {
   background-color: #071a37;
 }
@@ -27,6 +26,9 @@ p {
   font-size: 16px; 
 }
 
+a:visited{color:#f4d03f;}
+
+/*video*/
 .center {
     display: block;
     margin-left: auto;
@@ -34,18 +36,15 @@ p {
     width: 50%;
   }
 
+/*frame*/
   .image-container {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Space between images */
+    gap: 20px; 
 }
 
 .image-item {
     text-align: center;
-}
-.image-item img {
-    max-width: 100%; /* Ensures responsiveness */
-    height: auto;
 }
 
 .text-container{
@@ -54,16 +53,20 @@ padding: 30px;
 margin: 100px;
 }
 
+/*interpretation*/
+
 .credit-container{
   display: flex;
   justify-content: center;
   gap:200px;
 }
 
+/*credit*/
 .credit-item {
   text-align: center;
 }
 
+/*behind the scene*/
 .behind-container{
   display: flex;
   justify-content: center;
@@ -74,14 +77,14 @@ margin: 100px;
   text-align: right;
 }
 
+/*falling star*/
 #star {
   position: absolute;
   
   left: 50%;
   transform: translateX(-50%);
   z-index: -1;
-  width: 200px; /* 适当调整大小 */
+  width: 200px; 
   height: auto;
 }
 
-a:visited{color:#f4d03f;}
