@@ -1,0 +1,63 @@
+html{
+	/* Set height of the html page to 100% of the browser height */
+	height: 100%;
+	/* Hide horizontal scroll */
+	overflow-x: hidden;
+	font-family: sans-serif;
+}
+
+body{
+	/* Set height of the body to 100% -- separated out of html to allow scrollTo animation */
+	height: 100%;
+	margin: 0px;
+}
+
+#fish-div{
+	/* Fix fish div in the bottom right corner of the web page */
+	position: fixed;
+	bottom: 0px;
+	right: 200px;
+	width: 300px;
+	text-align: center;
+}
+
+#fish{
+	width: 600px;
+	margin-top: 18px;
+}
+
+#fish-text{
+	color: white;
+	background-color: black;
+	font-size: 20px;
+}
+
+#seabed, #pot{
+	/* Set height of div to 100% */
+    min-height: 100vh;
+	/* The bottom three background CSS settings create parallax effect */
+	background-attachment: fixed;
+	background-size: cover;
+	background-position: center;
+}
+
+#seabed{
+	/* Set background image of seabed section*/
+	background-image: url("seabed.jpg");
+}
+#pot{
+	/* Set background image of pot section*/
+	background-image: url('pot.png');
+}
+
+.text-section{
+	/* Center text in the middle of browser using flexbox */
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.text{
+	width: 70%;
+}
