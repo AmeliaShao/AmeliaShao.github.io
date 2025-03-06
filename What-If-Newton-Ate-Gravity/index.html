@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>What If Newton Ate Gravity?</title>
+  <style>
+    /* 1) Load the Comic Book font */
+    @font-face {
+      font-family: 'ComicBook';
+      src: url('Comic Book.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /* 2) Apply it to everything */
+    * {
+      font-family: 'ComicBook', sans-serif;
+    }
+
+    /* Global settings & resets */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      background-color: #69def9;
+    }
+
+    /* White overlay for transitions */
+    #transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      opacity: 0;
+      transition: opacity 1s ease;
+      pointer-events: none;
+      z-index: 5000;
+    }
+
+    /* Starting Page styles */
+    #starting-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #69def9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+      z-index: 1000;
+    }
+    #starting-text {
+      font-size: 3em;
+      color: white;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: float-start 3s ease-in-out infinite;
+    }
+    @keyframes float-start {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    /* Scene common settings */
+    .scene {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background: transparent;
+      display: none;
+      overflow: hidden;
+    }
+    .svg-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Scene 1 */
+    .scene1 .applemain1 {
+      position: absolute;
+      top: -550px;
+      right: -550px;
+      z-index: 3;
+      pointer-events: auto;
+      user-select: none;
+      cursor: pointer;
+    }
+    .scene1 .newton1 {
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      z-index: 4;
+    }
+    .scene1 .scene1img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* Scene 2 */
+    .scene2 .applemain2 {
+      position: absolute;
+      top: 220px;
+      left: 950px;
+      transform: translateX(-50%);
+      z-index: 10;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .scene2 .newton2 {
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      z-index: 3;
+    }
+    .scene2 .scene2img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* Scene 3 */
+    .scene3 .applemain3 {
+      position: absolute;
+      z-index: 6;
+      left: 370px;
+      top: 140px;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .scene3 .newton3 {
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      z-index: 5;
+    }
+    .scene3 .lightbulb {
+      position: absolute;
+      z-index: 3;
+      left: 300px;
+    }
+    .scene3 .grass {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* Scene 4 */
+    .scene4 .apple4 {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    .scene4 .text1, .scene4 .text2, .scene4 .text3, .scene4 .text4 {
+      position: absolute;
+      font-size: 2em;
+      color: #333;
+    }
+    .scene4 .lights {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* Crumbs in Scene 4 */
+    #crumbs {
+      position: absolute;
+      top: 62%;
+      left: 46%;
+      width: 80px;
+      height: 30px;
+      display: none;
+      z-index: 999;
+      pointer-events: none;
+    }
+    .crumb {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: red;
+    }
+    .crumb:nth-child(1) { top: 0px; left: 0px; }
+    .crumb:nth-child(2) { top: 5px; left: 15px; }
+    .crumb:nth-child(3) { top: 12px; left: 35px; }
+    .crumb:nth-child(4) { top: 2px; left: 55px; }
+    .crumb:nth-child(5) { top: 8px; left: 65px; }
+    #scene4-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 9999;
+      cursor: pointer;
+    }
+
+    /* Scene 5 */
+    .scene5 .newton5 {
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      z-index: 6;
+    }
+    .scene5 .applemain5 {
+      position: absolute;
+      top: 30px;
+      left: 230px;
+      z-index: 7;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .scene5 .grass5 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    /* Scene 6 */
+   /* Scene 6 */
+/* Scene 6 */
+.scene6 .newton6 {
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  z-index: 6;
+  animation: floatNewton 8s ease-in-out infinite;
+}
+
+.scene6 .bird {
+  position: absolute;
+  top: 15%;
+  right: 20%;
+  z-index: 5;
+  animation: floatBird 10s ease-in-out infinite;
+}
+
+/* The "main" tree at 25% from the left */
+.scene6 .tree6 {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 25% !important;
+  z-index: 4 !important;
+  animation: floatTree 12s ease-in-out infinite;
+}
+.scene6 .tree6-clone1 {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  z-index: 3 !important;
+  animation: floatTreeClone1 9s ease-in-out infinite;
+}
+.scene6 .tree6-clone2 {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 75% !important;
+  z-index: 2 !important;
+  animation: floatTreeClone2 11s ease-in-out infinite;
+}
+
+
+.scene6 .text6 {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  animation: floatText6 7s ease-in-out infinite;
+}
+
+.scene6 .grass6 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Keyframes remain the same */
+@keyframes floatNewton {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+@keyframes floatBird {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-20px, -15px); }
+  50% { transform: translate(0, -30px); }
+  75% { transform: translate(20px, -15px); }
+}
+@keyframes floatTree {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+@keyframes floatTreeClone1 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+@keyframes floatTreeClone2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(-5deg); }
+}
+@keyframes floatText6 {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -20px); }
+}
+
+
+
+    #scene6-reset-button {
+      position: absolute;
+      top: 5%;
+      right: 5%;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <!-- White overlay for transitions -->
+  <div id="transition-overlay"></div>
+  
+  <!-- Audio elements -->
+  <audio id="background-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="click-sound">
+    <source src="click.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="eating-sound">
+    <source src="eating.mp3" type="audio/mpeg">
+  </audio>
+  
+  <!-- Starting Page -->
+  <div id="starting-page">
+    <div id="starting-text">
+      What if Newton ate gravity?<br>
+      <span style="font-size: 0.5em;">Click to start</span>
+    </div>
+  </div>
+  
+  <!-- Scene 1 -->
+  <section class="scene scene1">
+    <div class="svg-container">
+      <img src="applemain1.svg" class="applemain1" draggable="false">
+      <img src="newton1.svg" class="newton1">
+      <img src="scene2.svg" class="scene1img">
+    </div>
+  </section>
+  
+  <!-- Scene 2 -->
+  <section class="scene scene2">
+    <div class="svg-container">
+      <img src="applemain2.svg" class="applemain2">
+      <img src="newton2.svg" class="newton2">
+      <img src="scene2.svg" class="scene2img">
+    </div>
+  </section>
+  
+  <!-- Scene 3 -->
+  <section class="scene scene3">
+    <div class="svg-container">
+      <img src="applemain3.svg" class="applemain3">
+      <img src="newton3.svg" class="newton3">
+      <img src="lightbulb.svg" class="lightbulb">
+      <img src="grass.svg" class="grass">
+    </div>
+  </section>
+  
+  <!-- Scene 4 -->
+  <section class="scene scene4">
+    <div class="svg-container">
+      <img src="apple4.svg" class="apple4">
+      <!-- Bouncing text in Scene 4 -->
+      <div class="text1">gravity?</div>
+      <div class="text2">acceleration...</div>
+      <div class="text3">math,physics,FOS???</div>
+      <div class="text4">objects pull on each other</div>
+
+      <img src="lights.svg" class="lights">
+      <div id="crumbs">
+        <div class="crumb"></div>
+        <div class="crumb"></div>
+        <div class="crumb"></div>
+        <div class="crumb"></div>
+        <div class="crumb"></div>
+      </div>
+
+      <div id="scene4-overlay"></div>
+    </div>
+  </section>
+  
+  <!-- Scene 5 -->
+  <section class="scene scene5">
+    <div class="svg-container">
+      <img src="newton5.svg" class="newton5">
+      <img src="applemain5.svg" class="applemain5">
+      <img src="grass.svg" class="grass5">
+    </div>
+  </section>
+  
+  <!-- Scene 6 -->
+  <section class="scene scene6">
+    <div class="svg-container">
+      <!-- Newton is draggable -->
+      <img src="newton6.svg" class="newton6">
+      <!-- Slight float for these items -->
+      <img src="bird.svg" class="bird">
+      <img src="tree66.svg" class="tree6">
+      <img src="tree66.svg" class="tree6-clone1">
+      <img src="tree66.svg" class="tree6-clone2">
+      <div class="text6">i ate gravity?!</div>
+
+      <img src="grass.svg" class="grass6">
+      <div id="scene6-reset-button">Restart</div>
+    </div>
+  </section>
+  
+  <script>
+    // Setup audio
+    const backgroundMusic = document.getElementById('background-music');
+    const clickSound = document.getElementById('click-sound');
+    const eatingSound = document.getElementById('eating-sound');
+    
+    backgroundMusic.volume = 0.4;   // BG music @ 40%
+    clickSound.volume = 0.5;       // Click sound @ 50%
+
+    function playClickSound() {
+      clickSound.currentTime = 0;
+      clickSound.play().catch(err => console.warn('Click sound blocked:', err));
+    }
+    document.addEventListener('click', e => {
+      if (e.isTrusted) playClickSound();
+    });
+
+    // Start -> Scene1
+    document.getElementById('starting-page').addEventListener('click', function() {
+      this.style.opacity = '0';
+      backgroundMusic.play().catch(err => console.warn('BG music blocked:', err));
+      setTimeout(() => {
+        this.style.display = 'none';
+        document.querySelector('.scene1').style.display = 'block';
+        adjustScene1();
+      }, 500);
+    });
+
+    // Scene1 -> Scene2
+    document.addEventListener('DOMContentLoaded', function() {
+      const apple1 = document.querySelector('.applemain1');
+      if (apple1) {
+        apple1.addEventListener('click', function() {
+          const overlay = document.getElementById('transition-overlay');
+          overlay.style.opacity = '1';
+          setTimeout(() => {
+            document.querySelector('.scene1').style.display = 'none';
+            document.querySelector('.scene2').style.display = 'block';
+            adjustScene2();
+            overlay.style.opacity = '0';
+          }, 1000);
+        });
+      }
+    });
+
+    // Scene2 -> Scene3
+    document.addEventListener('DOMContentLoaded', function() {
+      const apple2 = document.querySelector('.applemain2');
+      if (apple2) {
+        apple2.addEventListener('click', function() {
+          const overlay = document.getElementById('transition-overlay');
+          overlay.style.opacity = '1';
+          setTimeout(() => {
+            document.querySelector('.scene2').style.display = 'none';
+            document.querySelector('.scene3').style.display = 'block';
+            adjustScene3();
+            overlay.style.opacity = '0';
+          }, 1000);
+        });
+      }
+    });
+
+    // Scene3 -> Scene4
+    document.addEventListener('DOMContentLoaded', function() {
+      const apple3 = document.querySelector('.applemain3');
+      if (apple3) {
+        apple3.addEventListener('click', function() {
+          const overlay = document.getElementById('transition-overlay');
+          overlay.style.opacity = '1';
+          setTimeout(() => {
+            document.querySelector('.scene3').style.display = 'none';
+            document.querySelector('.scene4').style.display = 'block';
+            adjustScene4();
+            overlay.style.opacity = '0';
+          }, 1000);
+        });
+      }
+    });
+
+    // Scene4 -> Scene5
+    document.addEventListener('DOMContentLoaded', function() {
+      const overlay4 = document.getElementById('scene4-overlay');
+      if (overlay4) {
+        overlay4.addEventListener('click', function() {
+          const overlay = document.getElementById('transition-overlay');
+          overlay.style.opacity = '1';
+          setTimeout(() => {
+            document.querySelector('.scene4').style.display = 'none';
+            document.querySelector('.scene5').style.display = 'block';
+            adjustScene5();
+            eatingSound.play().catch(err => console.warn('Eating sound blocked:', err));
+            overlay.style.opacity = '0';
+          }, 1000);
+        });
+      }
+    });
+
+    // Scene5 -> Scene6
+    document.addEventListener('DOMContentLoaded', function() {
+      const apple5 = document.querySelector('.applemain5');
+      if (apple5) {
+        apple5.addEventListener('click', function() {
+          const overlay = document.getElementById('transition-overlay');
+          overlay.style.opacity = '1';
+          setTimeout(() => {
+            document.querySelector('.scene5').style.display = 'none';
+            document.querySelector('.scene6').style.display = 'block';
+            adjustScene6();
+            overlay.style.opacity = '0';
+          }, 1000);
+        });
+      }
+    });
+
+    // Restart in Scene6 -> back to Scene1
+    document.addEventListener('DOMContentLoaded', function() {
+      const resetButton = document.getElementById('scene6-reset-button');
+      if (resetButton) {
+        resetButton.addEventListener('click', function() {
+          const overlay = document.getElementById('transition-overlay');
+          overlay.style.opacity = '1';
+          setTimeout(() => {
+            document.querySelector('.scene6').style.display = 'none';
+            document.querySelector('.scene1').style.display = 'block';
+            adjustScene1();
+            overlay.style.opacity = '0';
+          }, 1000);
+        });
+      }
+    });
+
+    // Make Newton in Scene6 draggable
+    document.addEventListener('DOMContentLoaded', function() {
+      makeDraggable('.scene6 .newton6');
+    });
+    function makeDraggable(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      el.addEventListener('mousedown', function(e) {
+        if (document.querySelector('.scene6').style.display === 'block') {
+          isDragging = true;
+          offsetX = e.clientX - el.offsetLeft;
+          offsetY = e.clientY - el.offsetTop;
+          el.style.transition = 'none';
+        }
+      });
+      document.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+          e.preventDefault();
+          el.style.left = (e.clientX - offsetX) + 'px';
+          el.style.top = (e.clientY - offsetY) + 'px';
+        }
+      });
+      document.addEventListener('mouseup', function() {
+        isDragging = false;
+      });
+    }
+
+    /* ---------- Scene4 Bouncing Text ---------- */
+    let textItems = [];
+    let bounceAnimationId = null;
+    function startBouncingTexts() {
+      if (bounceAnimationId) {
+        cancelAnimationFrame(bounceAnimationId);
+      }
+      const textSelectors = ['.text1', '.text2', '.text3', '.text4'];
+      textItems = [];
+
+      textSelectors.forEach(sel => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+
+        const startX = window.innerWidth * 0.4 + Math.random() * 100;
+        const startY = window.innerHeight * 0.4 + Math.random() * 100;
+        const vx = (Math.random() * 2 + 1) * (Math.random() < 0.5 ? -1 : 1);
+        const vy = (Math.random() * 2 + 1) * (Math.random() < 0.5 ? -1 : 1);
+
+        el.style.left = startX + 'px';
+        el.style.top = startY + 'px';
+
+        const rect = el.getBoundingClientRect();
+        textItems.push({
+          el,
+          x: startX,
+          y: startY,
+          vx,
+          vy,
+          width: rect.width,
+          height: rect.height
+        });
+      });
+      bounceLoop();
+    }
+    function bounceLoop() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+
+      textItems.forEach(item => {
+        item.x += item.vx;
+        item.y += item.vy;
+
+        if (item.x < 0) {
+          item.x = 0;
+          item.vx *= -1;
+        } else if (item.x + item.width > w) {
+          item.x = w - item.width;
+          item.vx *= -1;
+        }
+        if (item.y < 0) {
+          item.y = 0;
+          item.vy *= -1;
+        } else if (item.y + item.height > h) {
+          item.y = h - item.height;
+          item.vy *= -1;
+        }
+        item.el.style.left = item.x + 'px';
+        item.el.style.top = item.y + 'px';
+      });
+      bounceAnimationId = requestAnimationFrame(bounceLoop);
+    }
+
+    /* ---------- Scene6 Slight Float for Bird, Trees, Text ---------- */
+    let scene6Items = [];
+    let scene6FloatId = null;
+    function startScene6SlightFloat() {
+      // Cancel old animation if any
+      if (scene6FloatId) {
+        cancelAnimationFrame(scene6FloatId);
+      }
+
+      const floatSelectors = [
+        '.scene6 .bird',
+        '.scene6 .tree6',
+        '.scene6 .tree6-clone1',
+        '.scene6 .tree6-clone2',
+        '.scene6 .text6'
+      ];
+      scene6Items = [];
+
+      floatSelectors.forEach(selector => {
+        const el = document.querySelector(selector);
+        if (!el) return;
+
+        // get initial absolute position from bounding rect
+        const rect = el.getBoundingClientRect();
+        // store baseX, baseY from the rect
+        const baseX = rect.left;
+        const baseY = rect.top;
+
+        // fix them in place as 'absolute'
+        el.style.left = baseX + 'px';
+        el.style.top = baseY + 'px';
+
+        // random phase so they don't all float in sync
+        const phase = Math.random() * 2 * Math.PI;
+
+        scene6Items.push({
+          el,
+          baseX,
+          baseY,
+          phase,
+          // random speed factor
+          speed: 0.002 + Math.random() * 0.001,
+          // small amplitude
+          amplitude: 10 + Math.random() * 5
+        });
+      });
+
+      // kick off animation
+      requestAnimationFrame(scene6FloatFrame);
+    }
+
+    function scene6FloatFrame(time) {
+      // time is in ms, we convert for our speed factor
+      scene6Items.forEach(item => {
+        // add time-based sine wave for slight vertical hover
+        const offset = item.amplitude * Math.sin(item.speed * time + item.phase);
+        const newY = item.baseY + offset;
+
+        item.el.style.top = newY + 'px';
+      });
+
+      scene6FloatId = requestAnimationFrame(scene6FloatFrame);
+    }
+
+    /* ---------- Scene Adjustments ---------- */
+    function adjustScene1() {
+      const bg = document.querySelector('.scene1img');
+      bg.style.width = '100%';
+      const newton = document.querySelector('.newton1');
+      newton.style.height = '90%';
+      newton.style.width = 'auto';
+    }
+    function adjustScene2() {
+      const bg = document.querySelector('.scene2img');
+      bg.style.width = '100%';
+      const newton = document.querySelector('.newton2');
+      newton.style.height = '90%';
+      newton.style.width = 'auto';
+    }
+    function adjustScene3() {
+      const newton = document.querySelector('.newton3');
+      newton.style.height = '90%';
+      newton.style.width = 'auto';
+      const grass = document.querySelector('.grass');
+      grass.style.width = '100%';
+      const apple = document.querySelector('.applemain3');
+      apple.style.width = 'auto';
+      apple.style.height = '75%';
+      const lightbulb = document.querySelector('.lightbulb');
+      lightbulb.style.width = 'auto';
+      lightbulb.style.height = '90%';
+    }
+    function adjustScene4() {
+      const lights = document.querySelector('.lights');
+      lights.style.width = '100%';
+      lights.style.height = '100%';
+      const apple = document.querySelector('.apple4');
+      apple.style.width = 'auto';
+      apple.style.height = '60%';
+
+      // Show crumb particles for 2 seconds
+      setTimeout(() => {
+        const crumbContainer = document.getElementById('crumbs');
+        crumbContainer.style.display = 'block';
+        setTimeout(() => {
+          crumbContainer.style.display = 'none';
+        }, 2000);
+      }, 1000);
+
+      // Start bouncing the text in scene4
+      startBouncingTexts();
+    }
+    function adjustScene5() {
+      const newton = document.querySelector('.newton5');
+      newton.style.height = '90%';
+      newton.style.width = 'auto';
+      const grass = document.querySelector('.grass5');
+      grass.style.width = '100%';
+
+      const vh = window.innerHeight;
+      const grassRect = grass.getBoundingClientRect();
+      const aspectRatio = grassRect.width / grassRect.height;
+      const minHeight = vh * 0.3;
+      const calcHeight = grass.offsetWidth / aspectRatio;
+      if (calcHeight < minHeight) {
+        grass.style.height = minHeight + 'px';
+      }
+      const apple = document.querySelector('.applemain5');
+      apple.style.width = 'auto';
+      apple.style.height = '100%';
+    }
+    function adjustScene6() {
+      // Newton (draggable), set size
+      const newton = document.querySelector('.newton6');
+      newton.style.height = '90%';
+      newton.style.width = 'auto';
+
+      // Grass static
+      const grass = document.querySelector('.grass6');
+      grass.style.width = '100%';
+      const vh = window.innerHeight;
+      const grassRect = grass.getBoundingClientRect();
+      const aspectRatio = grassRect.width / grassRect.height;
+      const minHeight = vh * 0.3;
+      const calcHeight = grass.offsetWidth / aspectRatio;
+      if (calcHeight < minHeight) {
+        grass.style.height = minHeight + 'px';
+      }
+
+      // Slight float for bird, trees, text
+      startScene6SlightFloat();
+    }
+
+    // Rerun on resize
+    window.addEventListener('resize', function() {
+      adjustScene1();
+      adjustScene2();
+      adjustScene3();
+      adjustScene4();
+      adjustScene5();
+      adjustScene6();
+    });
+
+    // Initial load
+    window.addEventListener('load', function() {
+      adjustScene1();
+      adjustScene2();
+      adjustScene3();
+      adjustScene4();
+      adjustScene5();
+      adjustScene6();
+    });
+  </script>
+</body>
+</html>
