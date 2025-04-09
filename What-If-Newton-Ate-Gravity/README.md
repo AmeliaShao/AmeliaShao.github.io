@@ -10,7 +10,10 @@ Since I was the one who came up with the story, I took the initiative to write t
 During class, our team discussed and refined some key details, like having Newton disappear in the fourth panel while the apple takes center stage.  
 ## Execution
 The next step was execution. We broke down the different elements and started searching online for reference images to turn into SVG files, making them easier to use in coding later. We also made sure to align on the art style before splitting up the tracing work.
-  
+
+What I designed for the first time:
+![IMG_7105](https://github.com/user-attachments/assets/7342cd1a-4361-4972-809c-4ea3ef4cec01)
+
 Later, we met up in person again to check our progress and divide the work further. We fleshed out the full storyline, added text to highlight the main idea, and included some comic-style expressions, like sound effects. After that, I created a basic wireframe to map out the interaction elements and page flow (to be honest, the content was pretty simple… but I accidentally lost the sketch…oops).
   
 Next, I handled the basic HTML and CSS setup, while the two guys on my team volunteered to take care of the JavaScript. But after a second meeting, we decided to do this in another way. 
