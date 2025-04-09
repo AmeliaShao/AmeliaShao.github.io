@@ -17,6 +17,9 @@ I combined these ideas into a final version about a girl who wakes up from a sca
 ### Script & Planning  
 - I wrote the final script and marked where each sound effect or background sound should appear.
 - This early planning made the following steps much easier.
+![PHOTO-2025-03-25-15-26-12](https://github.com/user-attachments/assets/cd83037b-c98e-4304-bec6-5c1e02035296)![PHOTO-2025-03-25-15-26-13](https://github.com/user-attachments/assets/8a595cab-a7f9-4e2d-b54f-6ed3e718f1d1)
+
+<img width="899" alt="截屏2025-04-09 22 11 32" src="https://github.com/user-attachments/assets/2b980e32-b547-4466-a750-288d99bf15e3" />
 
 ### Sound Recording & Collection  
 - Nigina searched for sound effects, renamed and organized them into folders on Google Drive.
