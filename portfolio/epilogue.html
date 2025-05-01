@@ -1,0 +1,95 @@
+<!-- epilogue.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Epilogue</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="epilogue">
+  <canvas id="meteorCanvas"></canvas>
+  <div class="epilogue-container">
+    <h1>Epilogue</h1>
+    <p>
+      The four folders you see link to the time, effort, and heart I poured into the Communication Lab course during the Spring 2025 semester. As an exchange student from NYU Shanghai, I took this required IMA course at NYU Abu Dhabi, and the experience was completely different from in Shanghai.<br><br>
+
+      Balancing website building, photo editing (PS, AI), audio production, and video making—all within just four months—was no easy task. But I truly experienced and learned a great deal.<br><br>
+
+      In each of these four projects, I took on some responsibility for developing the storyline. I’m deeply grateful that my teammates appreciated those moments of creative spark, and I genuinely cherished watching our small ideas take shape through collaboration. These stories feel like fragments of dreams—fleeting, yet miraculously preserved in some form. That’s why I chose the name for this website. <br>
+      
+      Overall, the tone of the works is light and playful, and I hope they bring a bit of joy to whoever encounters them. <br><br>
+      I hope these pieces speak to you in some way. Thank you for visiting. 🌠
+    </p>
+
+  <div class="button-group">
+    <a href="portfolio.html" class="back-button">← Back to Folders</a>
+    <a href="about.html" class="about-button">About Me →</a>
+  </div>
+  <script src="portfolio.js"></script>
+
+  <!-- Floating Bottle -->
+<div class="wish-bottle" id="wishBottle" title="Make a wish ✨">🫙</div>
+
+<!-- Modal -->
+<div class="wish-modal" id="wishModal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <h2>Send Your Wish ✨</h2>
+    <textarea id="wishInput" placeholder="Write your dream here..."></textarea>
+    <button id="sendWishBtn">Send</button>
+    <p class="wish-confirmation" id="wishConfirmation"></p>
+  </div>
+</div>
+
+<script>
+  const wishBottle = document.getElementById('wishBottle');
+  const wishModal = document.getElementById('wishModal');
+  const closeModal = document.getElementById('closeModal');
+  const sendWishBtn = document.getElementById('sendWishBtn');
+  const wishInput = document.getElementById('wishInput');
+  const wishConfirmation = document.getElementById('wishConfirmation');
+
+  // Show modal
+  wishBottle.addEventListener('click', () => {
+    wishModal.style.display = 'flex';
+  });
+
+  // Close modal
+  closeModal.addEventListener('click', () => {
+    wishModal.style.display = 'none';
+    wishInput.value = '';
+    wishConfirmation.textContent = '';
+  });
+
+  // Send wish
+  sendWishBtn.addEventListener('click', () => {
+    const wish = wishInput.value.trim();
+    if (wish) {
+      wishConfirmation.textContent = "✨ Your dream is now floating through the stars… It will be a secret.";
+      // Optional: save wish to localStorage
+      localStorage.setItem('userDream', wish);
+      wishInput.value = '';
+    } else {
+      wishConfirmation.textContent = "Please write something first 🌙";
+    }
+  });
+
+  // Randomly move the bottle
+  function moveBottleRandomly() {
+    const maxX = window.innerWidth - wishBottle.offsetWidth;
+    const maxY = window.innerHeight - wishBottle.offsetHeight;
+
+    const randomX = Math.floor(Math.random() * maxX);
+    const randomY = Math.floor(Math.random() * maxY);
+
+    wishBottle.style.left = `${randomX}px`;
+    wishBottle.style.top = `${randomY}px`;
+  }
+
+  // Move the bottle every 2-4 seconds
+  setInterval(moveBottleRandomly, Math.random() * 1000 + 2000);  // Random interval between 2s and 4s
+</script>
+
+</body>
+</html>

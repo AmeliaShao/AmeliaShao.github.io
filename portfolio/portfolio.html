@@ -1,0 +1,43 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta tags to set character encoding and responsive design -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>My Commlab Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Canvas element for meteor animation (background effect) -->
+  <canvas id="meteorCanvas"></canvas>
+  
+  <div class="title">
+    <p>Fragments of Dreams</p>
+  </div>
+  
+  <!-- Main container that holds all four clickable folders -->
+  <div class="container">
+    <!-- Each folder links to different portfolio pages when clicked -->
+    <div class="folder" onclick="location.href='https://ameliashao.github.io/30MFF:Assignment%201/30MFF.html'">📁<span>Shining Star</span></div>
+    <div class="folder" onclick="location.href='https://ameliashao.github.io/What-If-Newton-Ate-Gravity/index.html'">📁<span>Newton's Apple</span></div>
+    <div class="folder" onclick="location.href='https://ameliashao.github.io/Are_dreams_real/index.html'">📁<span>Real Dream</span></div>
+    <div class="folder" onclick="location.href='https://janiajones.github.io/Movie/'">📁<span>Alien Guide</span></div>
+  </div>
+
+  <!-- Button that links to the "epilogue.html" page (about me page) -->
+  <a href="epilogue.html" class="epilogue-button">📜 Epilogue</a>
+  
+  <!-- Linking to external JavaScript file (portfolio.js) for interactivity -->
+  <script src="portfolio.js"></script>
+
+  <!-- Signature section at the bottom of the page -->
+  <div class="sign">
+    <p>Amelia Shao - Communications Lab - Spring 2025 - NYUAD</p>
+  </div>
+</body>
+</html>

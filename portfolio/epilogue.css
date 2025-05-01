@@ -1,0 +1,200 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    background-color: black;
+    color: white;
+  }
+
+  .title{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  
+  .sign{
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  #meteorCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  
+  .container {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .folder {
+    font-size: 3rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .folder span {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .folder:hover {
+    transform: scale(1.2);
+  }
+  
+  .epilogue-button {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    color: white;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-family: monospace;
+    transition: all 0.3s ease;
+    z-index: 2;
+  }
+  
+  .epilogue-button:hover {
+    background: white;
+    color: black;
+  }
+  
+  .epilogue {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    text-align: center;
+    position: relative;
+  }
+  
+  .epilogue-container {
+    z-index: 1;
+    max-width: 800px;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.8rem;
+  }
+  
+  .epilogue-container h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .epilogue-container p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .back-button {
+    text-decoration: none;
+    color: white;
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  .back-button:hover {
+    background-color: white;
+    color: black;
+  }
+
+  .about-button {
+    text-decoration: none;
+    color: white;
+    background-color: transparent; 
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .about-button:hover {
+    background-color: white;
+    color: black;
+  }
+
+
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem; 
+    margin-top: 2rem; 
+  }
+
+  .about-container {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    max-width: 900px;
+    margin: 5% auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  
+  .about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+  }
+  
+  .about-image {
+    width: 40%;
+  }
+  
+  .about-text {
+    width: 60%;
+    padding: 2rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .about-text h1 {
+    font-size: 2rem;s
+    margin-bottom: 1rem;
+  }
+  
+  .about-text p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
