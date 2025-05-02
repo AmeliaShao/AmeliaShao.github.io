@@ -66,10 +66,7 @@
   sendWishBtn.addEventListener('click', () => {
     const wish = wishInput.value.trim();
     if (wish) {
-      wishConfirmation.textContent = "✨ Your dream is now floating through the stars… It will be a secret.";
-      // Optional: save wish to localStorage
-      localStorage.setItem('userDream', wish);
-      wishInput.value = '';
+      wishConfirmation.textContent = "✨ Is your dream clearer after you write it down? Don't worry, keep it to yourself. It will be a secret floating through the stars…";
     } else {
       wishConfirmation.textContent = "Please write something first 🌙";
     }
@@ -88,7 +85,7 @@
   }
 
   // Move the bottle every 2-4 seconds
-  setInterval(moveBottleRandomly, Math.random() * 1000 + 2000);  // Random interval between 2s and 4s
+  setInterval(moveBottleRandomly, Math.random() * 2000 + 2000);  // Random interval between 2s and 4s
 </script>
 
 </body>
