@@ -277,7 +277,7 @@ a:hover {
 /* Fixed position wish bottle */
 .wish-bottle {
   position: fixed;
-  font-size: 3rem;
+  font-size: 4.5rem;
   cursor: pointer;
   z-index: 999;
 }
