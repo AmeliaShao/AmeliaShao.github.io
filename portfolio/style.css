@@ -28,6 +28,16 @@ body {
   font-size: 0.85rem;
 }
 
+/* BGM info at the bottom center */
+.bgm {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 0.8rem;
+}
+
 /* Meteor canvas takes up the entire viewport */
 #meteorCanvas {
   position: fixed;
