@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What is IMA? Full Color Edition</title>
+    <style>
+        body {
+            background-color: #050505; /* 深色背景，让彩色拼贴更跳跃 */
+            color: white;
+            font-family: 'Georgia', serif; 
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        /* 核心画布 */
+        .collage-canvas {
+            position: relative;
+            width: 90vw; 
+            height: 70vh; 
+        }
+
+        /* 包含图片和中文副标题的盒子 */
+        .word-box {
+            position: absolute; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1; 
+        }
+
+        /* 单词图片的基础样式 */
+        .word-img {
+            height: 110px; /* 稍微调大一点点，让彩色更明显 */
+            width: auto;
+            
+            /* —————————————— 🛠️ 修复在这里！ —————————————— */
+            /* 删除了之前的 grayscale(100%) 滤镜 */
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); /* 加个阴影，让纸片更有立体感 */
+            /* ———————————————————————————————————————————— */
+            
+            transition: all 0.3s ease;
+        }
+
+        .zh-subtitle {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            opacity: 0.8; /* 稍微调亮一点 */
+            letter-spacing: 5px;
+            font-family: sans-serif; 
+            color: #eee;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* 中文也加个阴影，防瞎 */
+        }
+
+        /* Hover 交互：容器内未被选中的元素变暗变模糊 */
+        .collage-canvas:hover .word-box {
+            opacity: 0.15;
+            filter: blur(5px); /* 稍微加大模糊，突出重点 */
+        }
+
+        /* Hover 交互：被鼠标悬停的元素高亮、放大、归正、置于顶层 */
+        .collage-canvas .word-box:hover {
+            opacity: 1;
+            filter: blur(0); /* 移除了 grayscale(0%)，因为默认就是彩色的了 */
+            transform: scale(1.18) rotate(0deg) !important; /* 稍微再放大一点点 */
+            z-index: 99; 
+        }
+
+        /* —————————————— 每个词的独立定位和倾斜 (保持混乱) —————————————— */
+
+        #box-interactive {
+            top: 15%;
+            left: 7%;
+            transform: rotate(-9deg);
+        }
+
+        #box-media {
+            top: 52%; 
+            left: 36%; 
+            transform: rotate(5deg);
+        }
+
+        #box-arts {
+            top: 12%; 
+            right: 8%;
+            transform: rotate(-2deg);
+        }
+
+        /* ———————————————————————————————————————————————————————————— */
+
+        /* 语录展示区：固定在屏幕底部 */
+        #quote-display {
+            position: fixed;
+            bottom: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75vw;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            color: #fff; /* 纯白文字 */
+            text-align: center;
+            background: rgba(0,0,0,0.85); /* 更深的背景，确保文字清晰 */
+            padding: 25px;
+            border-radius: 12px;
+            pointer-events: none; 
+            border: 1px solid #333; /* 加个微弱的边框，更有质感 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="collage-canvas">
+        
+        <div class="word-box" id="box-interactive" data-quote="“我觉得最核心的是交互，万物皆可交互。” — Magnus <br><br> “交互在中文里太窄了，听起来像做 UI 的。” — Cecilia">
+            <img src="interactive.png" alt="Interactive" class="word-img">
+            <span class="zh-subtitle">交互</span>
+        </div>
+        
+        <div class="word-box" id="box-media" data-quote="“Media 更接近新闻传媒，我高中以为是去电视台的。” — Rebecca <br><br> “媒体就是通过新闻等渠道传播出去。” — 爷爷">
+            <img src="media.png" alt="Media" class="word-img">
+            <span class="zh-subtitle">媒体</span>
+        </div>
+        
+        <div class="word-box" id="box-arts" data-quote="“在中国，家长不想为莫名其妙的艺术买单。” — Rebecca <br><br> “学艺术可以提高素养，做生意时显得素质高些。” — 爷爷">
+            <img src="arts.png" alt="Arts" class="word-img">
+            <span class="zh-subtitle">艺术</span>
+        </div>
+
+    </div>
+
+    <div id="quote-display"></div>
+
+    <script>
+        const wordBoxes = document.querySelectorAll('.word-box');
+        const quoteDisplay = document.getElementById('quote-display');
+
+        wordBoxes.forEach(box => {
+            box.addEventListener('mouseenter', () => {
+                quoteDisplay.innerHTML = box.getAttribute('data-quote');
+                quoteDisplay.style.opacity = '1';
+            });
+
+            box.addEventListener('mouseleave', () => {
+                quoteDisplay.style.opacity = '0';
+            });
+        });
+    </script>
+</body>
+</html>
