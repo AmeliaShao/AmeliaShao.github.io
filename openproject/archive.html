@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMA Deep Talks Archive</title>
     <style>
+        
         body {
             background-color: #050505;
             color: white;
@@ -12,11 +14,43 @@
             margin: 0;
             padding: 60px 20px;
             /* 背景加上极其微弱的网格线，增加档案室的感觉 */
-            background-image: 
+            background-image:
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
+        
         }
+ .back-nav {
+            position: fixed;
+            top: 30px; /* 稍微往下移一点，避免太靠边 */
+            left: 30px;
+            z-index: 100;
+            display: block;
+           
+            padding: 8px;
+          
+            cursor: pointer;
+
+            /* 🌟 1. 初始状态：倾斜 */
+            transform: rotate(-7deg); /* 向左倾斜，你可以调整这个度数 */
+            
+            /* 🌟 2. 核心：所有属性的变化都要有一个平滑的过渡效果 */
+            transition: all 0.3s ease-out; /* 0.3秒平滑过渡 */
+        }
+
+        .back-nav img {
+            width: 140px; 
+            height: auto;
+            display: block;
+        }
+
+        /* 🌟 3. 悬停状态 (Hover)：变正、稍微放大 */
+        .back-nav:hover {
+            transform: rotate(0deg) scale(1.1); /* 归正到0度，并微微放大1.1倍 */
+          
+        
+        }
+        /* ———————————————————————————————————————————— */
 
         .page-title {
             text-align: center;
@@ -30,11 +64,15 @@
         /* 🛠️ 核心修改：使用 CSS Grid 实现两列布局 */
         .gallery-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 强制分成两列 */
-            gap: 80px 40px; /* 上下间距 80px，左右间距 40px */
-            max-width: 900px; /* 限制总宽度，让两列看起来紧凑一点 */
+            grid-template-columns: repeat(2, 1fr);
+            /* 强制分成两列 */
+            gap: 80px 40px;
+            /* 上下间距 80px，左右间距 40px */
+            max-width: 900px;
+            /* 限制总宽度，让两列看起来紧凑一点 */
             margin: 0 auto;
-            justify-items: center; /* 让卡片在格子居中 */
+            justify-items: center;
+            /* 让卡片在格子居中 */
         }
 
         /* 海报/卡片基础样式 */
@@ -42,7 +80,7 @@
             background-color: #e5e5e5;
             padding: 12px 12px 45px 12px;
             border-radius: 2px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -50,9 +88,12 @@
         }
 
         .talk-card img {
-            width: 300px; /* 海报的宽度 */
-            height: 400px; /* 海报的高度，调成了偏竖版的比例！ */
-            object-fit: cover;
+            width: 300px;
+            /* 限制宽度，保证两列排版不乱套 */
+            height: auto;
+            /* 🌟 核心修复：高度自动适应你的海报比例！ */
+            object-fit: contain;
+            /* 🌟 双重保险：保证内容完整显示，绝不裁剪 */
             filter: grayscale(80%) contrast(120%);
             transition: all 0.3s ease;
         }
@@ -70,29 +111,51 @@
         }
 
         /* —————————— 依然保留倾斜感，打破死板的对齐 —————————— */
-        .talk-card:nth-child(1) { transform: rotate(-3deg); }
-        .talk-card:nth-child(2) { transform: rotate(4deg) translateY(20px); }
-        .talk-card:nth-child(3) { transform: rotate(2deg); }
-        .talk-card:nth-child(4) { transform: rotate(-5deg) translateY(-10px); }
-        .talk-card:nth-child(5) { transform: rotate(-4deg); }
-        .talk-card:nth-child(6) { transform: rotate(3deg) translateY(15px); }
+        .talk-card:nth-child(1) {
+            transform: rotate(-3deg);
+        }
+
+        .talk-card:nth-child(2) {
+            transform: rotate(4deg) translateY(20px);
+        }
+
+        .talk-card:nth-child(3) {
+            transform: rotate(2deg);
+        }
+
+        .talk-card:nth-child(4) {
+            transform: rotate(-5deg) translateY(-10px);
+        }
+
+        .talk-card:nth-child(5) {
+            transform: rotate(-4deg);
+        }
+
+        .talk-card:nth-child(6) {
+            transform: rotate(3deg) translateY(15px);
+        }
 
         /* Hover 交互 */
         .talk-card:hover {
             transform: scale(1.08) rotate(0deg) translateY(0);
             z-index: 10;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
         }
+
         .talk-card:hover img {
             filter: grayscale(0%) contrast(100%);
         }
 
         /* —————————— 弹窗 (Modal) 样式保持不变 —————————— */
         .modal {
-            display: none; 
+            display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.95); /* 加深了背景色 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            /* 加深了背景色 */
             z-index: 999;
             justify-content: center;
             align-items: center;
@@ -104,7 +167,7 @@
             max-width: 1000px;
             aspect-ratio: 16 / 9;
             background: #000;
-            box-shadow: 0 0 50px rgba(255,255,255,0.05);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.05);
         }
 
         iframe {
@@ -122,42 +185,51 @@
             cursor: pointer;
             transition: color 0.3s;
         }
-        .close-btn:hover { color: #ff3333; }
+
+        .close-btn:hover {
+            color: #ff3333;
+        }
+        
     </style>
 </head>
+
+ <a href="home.html" class="back-nav">
+        <img src="home.png" alt="Home">
+    </a>
+    
 <body>
 
     <h1 class="page-title">THE ARCHIVES</h1>
 
     <div class="gallery-container">
-        
-        <div class="talk-card" onclick="openVideo('YOUTUBE_ID_1')">
-            <img src="poster_jean.jpg" alt="Jean">
+
+        <div class="talk-card" onclick="openVideo('3VvjPtsumls')">
+            <img src="poster_jean.png" alt="Jean">
             <span class="card-name">JEAN</span>
         </div>
 
         <div class="talk-card" onclick="openVideo('EsuzFKJLq7I')">
-            <img src="poster_rebecca.jpg" alt="Rebecca">
+            <img src="poster_rebecca.png" alt="Rebecca">
             <span class="card-name">REBECCA</span>
         </div>
 
-        <div class="talk-card" onclick="openVideo('YOUTUBE_ID_3')">
-            <img src="poster_chanel.jpg" alt="Chanel">
+        <div class="talk-card" onclick="openVideo('3wpkKTJRov0')">
+            <img src="poster_chanel.png" alt="Chanel">
             <span class="card-name">CHANEL</span>
         </div>
 
         <div class="talk-card" onclick="openVideo('YOUTUBE_ID_4')">
-            <img src="poster_peirong.jpg" alt="Peirong">
+            <img src="poster_peirong.png" alt="Peirong">
             <span class="card-name">PEIRONG</span>
         </div>
 
-        <div class="talk-card" onclick="openVideo('YOUTUBE_ID_5')">
-            <img src="poster_magnus.jpg" alt="Magnus">
+        <div class="talk-card" onclick="openVideo('qquZehdcO00')">
+            <img src="poster_magnus.png" alt="Magnus">
             <span class="card-name">MAGNUS</span>
         </div>
 
-        <div class="talk-card" onclick="openVideo('YOUTUBE_ID_6')">
-            <img src="poster_fellows.jpg" alt="Candy & Cecilia">
+        <div class="talk-card" onclick="openVideo('Tz-GyisHH0Y')">
+            <img src="poster_fellows.png" alt="Candy & Cecilia">
             <span class="card-name">FELLOWS</span>
         </div>
 
@@ -166,7 +238,9 @@
     <div id="videoModal" class="modal">
         <span class="close-btn" onclick="closeVideo()">&times;</span>
         <div class="video-container">
-           <iframe id="yt-player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe id="yt-player" src=""
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -181,15 +255,16 @@
 
         function closeVideo() {
             modal.style.display = 'none';
-            player.src = ''; 
+            player.src = '';
         }
 
-        modal.addEventListener('click', function(e) {
-            if(e.target === modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
                 closeVideo();
             }
         });
     </script>
 
 </body>
+
 </html>
