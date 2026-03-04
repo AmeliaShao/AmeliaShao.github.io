@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMA Deep Talks Archive</title>
     <style>
-        
         body {
             background-color: #050505;
             color: white;
@@ -18,38 +17,44 @@
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
-        
+
         }
- .back-nav {
+
+        .back-nav {
             position: fixed;
-            top: 30px; /* 稍微往下移一点，避免太靠边 */
+            top: 30px;
+            /* 稍微往下移一点，避免太靠边 */
             left: 30px;
             z-index: 100;
             display: block;
-           
+
             padding: 8px;
-          
+
             cursor: pointer;
 
             /* 🌟 1. 初始状态：倾斜 */
-            transform: rotate(-7deg); /* 向左倾斜，你可以调整这个度数 */
-            
+            transform: rotate(-7deg);
+            /* 向左倾斜，你可以调整这个度数 */
+
             /* 🌟 2. 核心：所有属性的变化都要有一个平滑的过渡效果 */
-            transition: all 0.3s ease-out; /* 0.3秒平滑过渡 */
+            transition: all 0.3s ease-out;
+            /* 0.3秒平滑过渡 */
         }
 
         .back-nav img {
-            width: 140px; 
+            width: 140px;
             height: auto;
             display: block;
         }
 
         /* 🌟 3. 悬停状态 (Hover)：变正、稍微放大 */
         .back-nav:hover {
-            transform: rotate(0deg) scale(1.1); /* 归正到0度，并微微放大1.1倍 */
-          
-        
+            transform: rotate(0deg) scale(1.1);
+            /* 归正到0度，并微微放大1.1倍 */
+
+
         }
+
         /* ———————————————————————————————————————————— */
 
         .page-title {
@@ -189,14 +194,13 @@
         .close-btn:hover {
             color: #ff3333;
         }
-        
     </style>
 </head>
 
- <a href="home.html" class="back-nav">
-        <img src="home.png" alt="Home">
-    </a>
-    
+<a href="home.html" class="back-nav">
+    <img src="home.png" alt="Home">
+</a>
+
 <body>
 
     <h1 class="page-title">THE ARCHIVES</h1>
