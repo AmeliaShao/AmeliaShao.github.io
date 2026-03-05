@@ -14,7 +14,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 🌟 确保 body 的直接子元素水平居中 */
             min-height: 100vh;
             padding: 50px 20px;
             overflow-x: hidden;
@@ -34,7 +33,6 @@
 
         .back-nav img {
             width: 140px;
-            /* 保持你调整后的尺寸 */
             height: auto;
             display: block;
         }
@@ -43,7 +41,6 @@
             transform: rotate(0deg) scale(1.1);
         }
 
-        /* —————— 核心修改部分 —————— */
         .header {
             width: 100%;
             text-align: center;
@@ -59,12 +56,43 @@
             max-width: 600px;
             z-index: 10;
             margin: 0 auto 50px auto;
-            /* 🌟 增加 margin: auto 确保块级元素居中 */
             text-align: left;
-            /* 保持内部文字左对齐，更有档案感 */
         }
 
-        /* ———————————————————————— */
+        /* —————— 🌟 新增：视频提示框样式 —————— */
+        .video-reminder {
+            background: #111;
+            border-left: 4px solid #ffff00;
+            padding: 12px 15px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            color: #ccc;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .video-reminder span {
+            color: #ffff00;
+            font-weight: bold;
+            margin-right: 10px;
+           /* animation: blink 1.5s infinite; *//* 闪烁动画 */
+        }
+
+        .video-reminder a {
+            color: #fff;
+            text-decoration: underline;
+            text-decoration-style: dashed;
+            text-underline-offset: 4px;
+            transition: color 0.3s;
+        }
+
+        .video-reminder a:hover {
+            color: #ffff00;
+        }
+
+        @keyframes blink { 
+            50% { opacity: 0; } 
+        }
+        /* ———————————————————————————————— */
 
         .poll-question {
             margin-bottom: 20px;
@@ -129,7 +157,6 @@
             max-width: 1200px;
             min-height: 400px;
             margin: 0 auto;
-            /* 🌟 确保留言墙本身也居中 */
         }
 
         .note {
@@ -158,25 +185,20 @@
             border-bottom: 1px solid #ccc;
         }
 
-        /* 滑动引导样式 */
         .scroll-hint {
             position: fixed;
-            /* 固定在屏幕底部，不随页面滚动消失 */
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            color: #006b59;
-            /* 使用和你按钮一样的深绿色，或者用 #ffff00 亮黄色 */
+            color: #fff;
             font-family: 'Courier New', Courier, monospace;
             font-size: 0.8rem;
             font-weight: bold;
             letter-spacing: 2px;
             z-index: 999;
             pointer-events: none;
-            /* 确保它不挡住鼠标点击海报 */
             background: rgba(5, 5, 5, 0.7);
-            /* 给文字加一点点半透明黑底，防止被海报挡住看不清 */
             padding: 10px 20px;
             border: 1px dashed #444;
         }
@@ -186,30 +208,14 @@
             font-size: 1.2rem;
             margin-top: 5px;
             animation: bounce 2s infinite;
-            /* 跳动动画 */
         }
 
-        /* 箭头跳动动画 */
         @keyframes bounce {
-
-            0%,
-            20%,
-            50%,
-            80%,
-            100% {
-                transform: translateY(0);
-            }
-
-            40% {
-                transform: translateY(-10px);
-            }
-
-            60% {
-                transform: translateY(-5px);
-            }
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
 
-        /* 🌟 进阶：当用户往下滚动一点点后，这个指引自动消失 */
         .scroll-hint.hidden {
             opacity: 0;
             transition: opacity 0.5s ease;
@@ -223,9 +229,13 @@
 
     <div class="header">
         <h1>THE GUESTBOOK</h1>
-        <p>[ VOICES FROM THE VOID ]</p>
-    </div>
+        </div>
+    
     <div class="form-container">
+        <div class="video-reminder">
+            <span>[ NOTICE ]</span> If you haven't watched the video, please <a href="video.html">CLICK HERE</a>.
+        </div>
+
         <div class="poll-question">After watching this, IMA is...</div>
         <div class="poll-options">
             <button class="poll-btn" onclick="setChoice('CLEARER')">CLEARER</button>
@@ -237,10 +247,12 @@
     </div>
 
     <div id="message-wall"></div>
+    
     <div class="scroll-hint" id="scrollHint">
-        SCROLL DOWN TO VIEW THE THOUGHTS
+        SCROLL DOWN TO VIEW OTHERS' THOUGHTS
         <span>↓</span>
     </div>
+
     <script>
         let currentChoice = "";
 
@@ -296,10 +308,10 @@
         }
 
         window.onload = renderMessages;
-        
+
         window.onscroll = function () {
             const hint = document.getElementById('scrollHint');
-            if (window.scrollY > 100) { // 滚动超过100像素就隐藏
+            if (window.scrollY > 100) { 
                 hint.style.opacity = "0";
             } else {
                 hint.style.opacity = "1";
