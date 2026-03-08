@@ -8,7 +8,7 @@
         body {
             background-color: #050505;
             color: white;
-            font-family: 'Georgia', serif; 
+            font-family: 'Courier New','Georgia', serif; 
             margin: 0;
             overflow: hidden;
             display: flex;
@@ -97,25 +97,49 @@
         #box-interactive { top: 15%; left: 8%; transform: rotate(-10deg); }
         #box-media { top: 55%; left: 36%; transform: rotate(5deg); }
         #box-arts { top: 12%; right: 12%; transform: rotate(-2deg); }
-
+/* 基础语录显示区（去掉了固定的位置属性） */
         #quote-display {
             position: fixed;
-            bottom: 5vh;
+            width: 35vw; /* 限制宽度，让中英文自动换行，不显得太长 */
+            font-size: 1.05rem;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 0.4s ease; 
+            color: #fff;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 20px 25px;
+            pointer-events: none; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            z-index: 10; 
+        }
+
+        /* 🌟 针对 Interactive -> 放在左下角 */
+        #quote-display.pos-interactive {
+            bottom: 8vh;
+            left: 5vw;
+            text-align: left;
+            border-left: 3px solid #ffff00; /* 加个小黄边呼应 */
+        }
+
+        /* 🌟 针对 Media -> 放在顶部中间 */
+        #quote-display.pos-media {
+            top: 8vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 75vw;
-            font-size: 1.2rem;
-            line-height: 1.8;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            color: #fff;
             text-align: center;
-            background: rgba(0,0,0,0.85);
-            padding: 25px;
-            border-radius: 12px;
-            pointer-events: none; 
-            border: 1px solid #333;
+            border-top: 3px solid #ffff00;
+            width: 45vw; /* Media 的字比较多，给宽一点 */
         }
+
+        /* 🌟 针对 Arts -> 放在右下角 */
+        #quote-display.pos-arts {
+            bottom: 8vh;
+            right: 5vw;
+            text-align: right;
+            border-right: 3px solid #ffff00;
+        }
+
+        
     </style>
 </head>
 <body>
@@ -124,7 +148,8 @@
         
         <div class="word-box" id="box-interactive" 
              onclick="location.href='guestbook.html'" 
-             data-quote="“我觉得最核心的是交互，万物皆可交互。” — Magnus <br> “交互在中文里太窄了，听起来像做 UI 的。” — Cecilia">
+             data-quote="“Anything can be interative。” — Magnus <br> <br>
+             “Interactive in Chinese has very limited meaning.”<br>“交互在中文里太窄了。” — Candy">
             <div class="enter-label">[ LEAVE A WORD ]</div>
             <img src="interactive.png" alt="Interactive" class="word-img">
             <span class="zh-subtitle">交互</span>
@@ -132,16 +157,23 @@
         
         <div class="word-box" id="box-media" 
              onclick="location.href='archive.html'" 
-             data-quote="“Media 更接近新闻传媒，我高中以为是去电视台的。” — Rebecca <br> “媒体就是通过新闻等渠道传播出去。” — 爷爷">
-            <div class="enter-label">[ DIVE DEEP IN INTERVIEW ARCHIVES ]</div>
+             data-quote="“Media in Chinese is closer to the press.”<br> “Media 更接近新闻传媒，我高中以为是去电视台的。” — Rebecca <br> <br>
+             “Media? That's news, right?” <br>
+             “媒体么，就是新闻呀。” — My grandpa/爷爷"> 
+            
+            <div class="enter-label">[ DIVE DEEP IN DETAILS OF INTERVIEWS ]</div>
             <img src="media.png" alt="Media" class="word-img">
             <span class="zh-subtitle">媒体</span>
         </div>
         
         <div class="word-box" id="box-arts" 
              onclick="location.href='video.html'" 
-             data-quote="“在中国，家长不想为莫名其妙的艺术买单。” — Rebecca <br> “学艺术可以提高素养，做生意时显得素质高些。” — 爷爷">
-            <div class="enter-label">[ VIEW FINAL WORK ]</div>
+             data-quote="“Art, always feele like fine art in Chinese“<br>
+             “艺术总感觉是在说fine art。” — Rebecca <br> <br>
+             “Art can improve your profile and help with your business.” <br>
+             “学艺术可以提高素养，做生意时显得素质高些。” <br>
+             — My grandpa/爷爷">
+            <div class="enter-label">[ VIEW THE MAIN VIDEO ]</div>
             <img src="arts.png" alt="Arts" class="word-img">
             <span class="zh-subtitle">艺术</span>
         </div> </div>
@@ -154,12 +186,25 @@
 
         wordBoxes.forEach(box => {
             box.addEventListener('mouseenter', () => {
+                // 自动识别当前的单词是什么 (从 'box-interactive' 里提取 'interactive')
+                const type = box.id.split('-')[1]; 
+                
+                // 赋予它对应的位置排版 class
+                quoteDisplay.className = 'pos-' + type;
+                
+                // 填入中英文翻译内容
                 quoteDisplay.innerHTML = box.getAttribute('data-quote');
                 quoteDisplay.style.opacity = '1';
             });
 
             box.addEventListener('mouseleave', () => {
                 quoteDisplay.style.opacity = '0';
+                // 稍微延迟清除 class，防止动画闪烁
+                setTimeout(() => {
+                    if (quoteDisplay.style.opacity === '0') {
+                        quoteDisplay.className = ''; 
+                    }
+                }, 400);
             });
         });
     </script>
