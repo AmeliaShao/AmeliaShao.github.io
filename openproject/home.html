@@ -94,13 +94,14 @@
             z-index: 99; 
         }
 
-        #box-interactive { top: 15%; left: 8%; transform: rotate(-10deg); }
-        #box-media { top: 55%; left: 36%; transform: rotate(5deg); }
-        #box-arts { top: 12%; right: 12%; transform: rotate(-2deg); }
-/* 基础语录显示区（去掉了固定的位置属性） */
+        #box-interactive { top: 10%; left: 4%; transform: rotate(-10deg); }
+        #box-media { top: 25%; left: 64%; transform: rotate(5deg); }
+        #box-arts { top: 62%; left: 22%; transform: rotate(9deg); }
+        
+        /* 基础语录显示区 */
         #quote-display {
             position: fixed;
-            width: 35vw; /* 限制宽度，让中英文自动换行，不显得太长 */
+            width: 35vw; 
             font-size: 1.05rem;
             line-height: 1.6;
             opacity: 0;
@@ -113,33 +114,77 @@
             z-index: 10; 
         }
 
-        /* 🌟 针对 Interactive -> 放在左下角 */
         #quote-display.pos-interactive {
             bottom: 8vh;
             left: 5vw;
             text-align: left;
-            border-left: 3px solid #ffff00; /* 加个小黄边呼应 */
+            border-left: 3px solid #ffff00;
         }
 
-        /* 🌟 针对 Media -> 放在顶部中间 */
         #quote-display.pos-media {
             top: 8vh;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             border-top: 3px solid #ffff00;
-            width: 45vw; /* Media 的字比较多，给宽一点 */
+            width: 45vw; 
         }
 
-        /* 🌟 针对 Arts -> 放在右下角 */
         #quote-display.pos-arts {
             bottom: 8vh;
-            right: 5vw;
+            right: 16vw;
             text-align: right;
             border-right: 3px solid #ffff00;
         }
 
-        
+        /* 🌟 新增：右下角问号官方入口样式 */
+        .official-link {
+            position: fixed;
+            bottom: 80px;
+            right: 100px;
+            z-index: 100; /* 保证在最上层 */
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .official-link img {
+            width: 100px; /* 控制问号图片的大小，你可以根据实际图片调整 */
+            height: auto;
+            opacity: 0.6;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        /* 问号旁边的黄色提示标签 */
+        .official-label {
+            background: #ffff00;
+            color: #000;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            margin-right: 30px;
+            box-shadow: 3px 3px 0px #444;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        /* Hover 时的动效：图片变亮并轻微跳动，标签滑出 */
+        .official-link:hover img {
+            opacity: 1;
+            filter: grayscale(0%) drop-shadow(0 0 15px rgba(255, 255, 0, 0.6));
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .official-link:hover .official-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
     </style>
 </head>
 <body>
@@ -148,7 +193,7 @@
         
         <div class="word-box" id="box-interactive" 
              onclick="location.href='guestbook.html'" 
-             data-quote="“Anything can be interative。” — Magnus <br> <br>
+             data-quote="“Anything can be interactive。” — Magnus <br> <br>
              “Interactive in Chinese has very limited meaning.”<br>“交互在中文里太窄了。” — Candy">
             <div class="enter-label">[ LEAVE A WORD ]</div>
             <img src="interactive.png" alt="Interactive" class="word-img">
@@ -168,7 +213,7 @@
         
         <div class="word-box" id="box-arts" 
              onclick="location.href='video.html'" 
-             data-quote="“Art, always feele like fine art in Chinese“<br>
+             data-quote="“Art, always feels like fine art in Chinese“<br>
              “艺术总感觉是在说fine art。” — Rebecca <br> <br>
              “Art can improve your profile and help with your business.” <br>
              “学艺术可以提高素养，做生意时显得素质高些。” <br>
@@ -176,9 +221,15 @@
             <div class="enter-label">[ VIEW THE MAIN VIDEO ]</div>
             <img src="arts.png" alt="Arts" class="word-img">
             <span class="zh-subtitle">艺术</span>
-        </div> </div>
+        </div> 
+    </div>
 
     <div id="quote-display"></div>
+
+    <a href="official.html" class="official-link">
+        <div class="official-label">[ "OFFICIAL" IMA? ]</div>
+        <img src="question.png" alt="Official">
+    </a>
 
     <script>
         const wordBoxes = document.querySelectorAll('.word-box');
