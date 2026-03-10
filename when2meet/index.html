@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When2meet Clone</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; background-color: #f9f9f9; }
+        
+        /* Event Link Bar */
+        .event-bar { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; width: 100%; max-width: 1000px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .event-bar input { width: 350px; padding: 5px; text-align: center; font-family: monospace; }
+        
+        /* Layout: Left and Right Panels */
+        .container { display: flex; gap: 40px; max-width: 1100px; width: 100%; justify-content: center; }
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column;}
+        .panel h3 { margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 18px; }
+
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .form-group input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .save-btn { margin-top: 15px; padding: 10px; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; width: 100%; }
+        .save-btn:hover { background-color: #218838; }
+
+        /* Grid Setup - Now adjusted for 30min slots */
+        .calendar-headers { display: grid; grid-template-columns: 50px repeat(5, 50px); gap: 2px; margin-bottom: 5px; text-align: center; font-weight: bold; font-size: 12px; }
+        .grid { display: grid; grid-template-columns: 50px repeat(5, 50px); gap: 2px; background-color: #ddd; border: 1px solid #ccc; user-select: none; -webkit-user-select: none; }
+        
+        .time-label { display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; font-size: 11px; color: #555; background-color: #f9f9f9; }
+
+        /* Height reduced from 25px to 15px to fit 48 slots gracefully */
+        .time-slot { height: 15px; background-color: #fff; cursor: crosshair; } 
+        .input-grid .time-slot:hover { background-color: #f0f0f0; }
+        .input-grid .time-slot.selected { background-color: #a8d5ba; } 
+        
+        .group-grid .time-slot { cursor: default; } 
+
+        .participants-list { margin-bottom: 15px; max-height: 120px; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 4px; }
+        .participant-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="event-bar">
+        <strong>🔗 Share this link with your group:</strong><br><br>
+        <input type="text" id="event-link" readonly onclick="this.select();" title="Click to copy">
+    </div>
+
+    <div class="container">
+        <div class="panel">
+            <h3>1. Sign In & Availability</h3>
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Your Name">
+                <input type="password" id="pin" placeholder="4-digit PIN">
+            </div>
+            
+            <div class="calendar-headers">
+                <div></div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div>
+            </div>
+            <div id="input-grid" class="grid input-grid"></div>
+            
+            <button id="save-btn" class="save-btn">Save & Submit</button>
+        </div>
+
+        <div class="panel">
+            <h3>2. Group Overlap</h3>
+            <div class="participants-list" id="participants-list">
+                <em>Loading participants...</em>
+            </div>
+            <div class="calendar-headers">
+                <div></div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div>
+            </div>
+            <div id="group-grid" class="grid group-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Event ID URL Logic ---
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentEventId = urlParams.get('event');
+        
+        // If no event ID in URL, generate one and redirect
+        if (!currentEventId) {
+            currentEventId = Math.random().toString(36).substring(2, 10); // e.g. "a1b2c3d4"
+            window.location.href = `?event=${currentEventId}`;
+        }
+        
+        // Display the shareable link
+        document.getElementById('event-link').value = window.location.href;
+
+
+        // --- 2. Grid Generation (30 min intervals) ---
+        const totalDays = 5; 
+        const totalSlotsPerDay = 48; // ✨ 24 hours * 2 (every 30 mins)
+        const totalSlots = totalDays * totalSlotsPerDay;
+        let globalUsersData = []; 
+
+        const inputGrid = document.getElementById('input-grid');
+        const groupGrid = document.getElementById('group-grid');
+        let isMouseDown = false;
+        let isSelecting = true; 
+        let slotIndex = 0;
+
+        for (let row = 0; row < totalSlotsPerDay; row++) {
+            // ✨ Calculate Hours and Minutes
+            const hour = Math.floor(row / 2);
+            const mins = row % 2 === 0 ? '00' : '30';
+            const timeString = `${hour}:${mins}`;
+
+            const timeLabelIn = document.createElement('div');
+            timeLabelIn.className = 'time-label';
+            timeLabelIn.textContent = timeString;
+            inputGrid.appendChild(timeLabelIn);
+
+            const timeLabelGrp = document.createElement('div');
+            timeLabelGrp.className = 'time-label';
+            timeLabelGrp.textContent = timeString;
+            groupGrid.appendChild(timeLabelGrp);
+
+            for (let col = 0; col < totalDays; col++) {
+                const inputCell = document.createElement('div');
+                inputCell.classList.add('time-slot');
+                inputCell.dataset.index = slotIndex; 
+                inputCell.addEventListener('mousedown', function() {
+                    isMouseDown = true;
+                    isSelecting = !inputCell.classList.contains('selected');
+                    toggleCell(inputCell);
+                });
+                inputCell.addEventListener('mouseenter', function() {
+                    if (isMouseDown) toggleCell(inputCell);
+                });
+                inputGrid.appendChild(inputCell);
+
+                const groupCell = document.createElement('div');
+                groupCell.classList.add('time-slot');
+                groupCell.id = 'group-slot-' + slotIndex; 
+                groupGrid.appendChild(groupCell);
+
+                slotIndex++;
+            }
+        }
+
+        window.addEventListener('mouseup', function() { isMouseDown = false; });
+        function toggleCell(cell) {
+            if (isSelecting) cell.classList.add('selected');
+            else cell.classList.remove('selected');
+        }
+
+        // --- 3. Data Fetching & Rendering ---
+        async function fetchGroupData() {
+            try {
+                // ✨ Add event_id to the fetch request
+                const response = await fetch(`/api/get_all_data?event_id=${currentEventId}`);
+                globalUsersData = await response.json();
+                renderParticipantsList();
+                calculateAndRenderHeatmap();
+            } catch (error) {
+                console.error("Failed to fetch group data.", error);
+            }
+        }
+
+        function renderParticipantsList() {
+            const listContainer = document.getElementById('participants-list');
+            listContainer.innerHTML = ''; 
+            if (globalUsersData.length === 0) {
+                listContainer.innerHTML = '<em>No participants yet.</em>';
+                return;
+            }
+            globalUsersData.forEach((user, index) => {
+                const label = document.createElement('label');
+                label.className = 'participant-item';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = true; 
+                checkbox.dataset.userIndex = index;
+                checkbox.addEventListener('change', calculateAndRenderHeatmap);
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(user.username));
+                listContainer.appendChild(label);
+            });
+        }
+
+        function calculateAndRenderHeatmap() {
+            const checkboxes = document.querySelectorAll('#participants-list input[type="checkbox"]');
+            const activeUsers = [];
+            checkboxes.forEach(box => {
+                if (box.checked) activeUsers.push(globalUsersData[box.dataset.userIndex]);
+            });
+
+            let slotCounts = new Array(totalSlots).fill(0);
+            activeUsers.forEach(user => {
+                user.available_slots.forEach(index => {
+                    if (index >= 0 && index < totalSlots) slotCounts[index]++;
+                });
+            });
+
+            const maxCount = activeUsers.length;
+            for (let i = 0; i < totalSlots; i++) {
+                const groupCell = document.getElementById('group-slot-' + i);
+                const count = slotCounts[i];
+                if (maxCount > 0 && count === maxCount) {
+                    groupCell.style.backgroundColor = '#28a745'; 
+                } else {
+                    groupCell.style.backgroundColor = '#fff'; 
+                }
+            }
+        }
+
+        // --- 4. Saving Data ---
+        document.getElementById('save-btn').addEventListener('click', async function() {
+            const username = document.getElementById('username').value.trim();
+            const pin = document.getElementById('pin').value.trim();
+            if (!username || !pin) { alert("Please enter your name and PIN!"); return; }
+
+            const selectedCells = document.querySelectorAll('.input-grid .time-slot.selected');
+            const availableSlots = Array.from(selectedCells).map(c => parseInt(c.dataset.index, 10));
+
+            // ✨ Add event_id to the payload being sent to backend
+            const payload = { event_id: currentEventId, username, pin, available_slots: availableSlots };
+
+            try {
+                const btn = document.getElementById('save-btn');
+                const originalText = btn.innerText;
+                btn.innerText = "Saving...";
+                btn.disabled = true;
+
+                const response = await fetch('/api/save_time', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                btn.innerText = originalText;
+                btn.disabled = false;
+
+                if (response.ok) {
+                    fetchGroupData(); 
+                } else {
+                    alert("Error: " + result.error);
+                }
+            } catch (error) {
+                alert("Connection failed.");
+                document.getElementById('save-btn').disabled = false;
+                document.getElementById('save-btn').innerText = "Save & Submit";
+            }
+        });
+
+        window.onload = fetchGroupData;
+    </script>
+</body>
+</html>
