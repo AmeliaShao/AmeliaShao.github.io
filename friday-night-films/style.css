@@ -130,3 +130,14 @@ html,body{max-width:100%;overflow-x:hidden}
 .lineup-pick.empty-pick{grid-template-columns:1fr}
 @media(max-width:850px){.lineup-card{grid-template-columns:1fr auto}.lineup-pick{grid-column:1/-1;grid-row:2;border-left:0;border-top:1px solid var(--ink);padding:16px 0 0}}
 @media(max-width:650px){.lineup-card{grid-template-columns:1fr}.lineup-pick{grid-column:auto;grid-row:auto}.lineup-edit{width:100%}}
+
+
+/* V3.5 lineup layout alignment fix */
+.lineup-card{grid-template-columns:minmax(0,1fr) auto;align-items:center}
+.lineup-card>div:first-child{min-width:0}
+.lineup-pick{display:grid;grid-template-columns:58px minmax(0,1fr);gap:12px;align-items:center;border-left:0;padding-left:0;margin:10px 0 14px;max-width:520px}
+.lineup-pick small{display:block;font-size:9px;letter-spacing:.08em;opacity:.58;margin-bottom:3px}
+.lineup-pick strong{display:block;font-family:'Playfair Display',serif;font-size:20px;line-height:1.05}
+.lineup-pick span{display:block;font-size:8px;letter-spacing:.12em;color:var(--accent);margin-top:5px}
+.lineup-edit{min-width:220px}
+@media(max-width:850px){.lineup-card{grid-template-columns:1fr}.lineup-edit{width:100%;min-width:0}.lineup-pick{max-width:none}}
