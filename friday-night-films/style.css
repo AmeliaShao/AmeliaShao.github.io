@@ -88,3 +88,34 @@ html{scroll-behavior:smooth}.top-nav{position:sticky;top:0;z-index:20;display:fl
 .randomizer-section{margin-top:80px}
 #moviesSection{margin-top:80px}
 @media(max-width:600px){.top-nav{justify-content:flex-start;gap:20px;overflow-x:auto;padding-left:6vw;padding-right:6vw}.top-nav a{font-size:11px;white-space:nowrap}}
+
+/* V3.3 mobile layout pass */
+html,body{max-width:100%;overflow-x:hidden}
+#movieWheel{max-width:100%;height:auto}
+@media(max-width:760px){
+  main{padding-left:18px;padding-right:18px}
+  header{padding-left:18px;padding-right:18px}
+  .top-nav{justify-content:flex-start;padding-left:18px;padding-right:18px;gap:18px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .top-nav::-webkit-scrollbar{display:none}
+  .randomizer-layout{display:block}
+  .wheel-stage{width:min(88vw,430px);max-width:100%;margin:18px auto 28px;overflow:visible}
+  .wheel-stage canvas{width:100%!important;height:auto!important;max-width:100%;aspect-ratio:1/1}
+  .wheel-pointer{top:-10px;font-size:27px}
+  .randomizer-panel{width:100%;max-width:none}
+  .spin-button{width:100%;min-height:52px}
+  .genre-filters.compact{max-width:100%;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:8px}
+  .lineup-main{display:grid;grid-template-columns:1fr;gap:8px}
+  .lineup-card{padding:18px}
+}
+@media(max-width:480px){
+  h1{font-size:clamp(58px,19vw,86px);line-height:.78}
+  main{padding-top:38px}
+  .wheel-stage{width:min(84vw,360px)}
+  .randomizer-panel h3{font-size:44px}
+  .grid{grid-template-columns:1fr;gap:34px}
+  .poster{max-height:none}
+  .attendee{width:calc(50% - 8px)}
+  .attendants{justify-content:flex-start}
+  dialog{width:calc(100vw - 20px);max-height:92dvh;overflow:auto}
+  form{padding:28px 20px}
+}
