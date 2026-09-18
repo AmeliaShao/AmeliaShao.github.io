@@ -1,8 +1,42 @@
-# Friday Night Films — basic prototype
+# Friday Night Films — V1.1
 
-Open `index.html` in a browser. This V0 intentionally uses browser localStorage so you can test the UX immediately.
+A tiny movie-night ballot for friends.
 
-Important: localStorage is device-specific, so friends will NOT share the same list yet. The next step is replacing the localStorage functions in `app.js` with Supabase reads/inserts/updates. No image storage is needed if posters come from TMDB URLs.
+## What's new
+- Search movies while suggesting a film.
+- TMDB automatically supplies poster, title and year.
+- Click any poster/title to open a Douban movie search for that film.
+- Voting and submissions still persist locally in the browser for this prototype.
 
-## GitHub Pages
-Upload these files to a GitHub repository, then enable Settings → Pages → Deploy from branch.
+## 1. Get a free TMDB API key
+Create/log into a TMDB account, go to Account Settings > API, request an API key, then copy the **v3 API Key**.
+
+Open `config.js` and paste it here:
+
+    window.FNF_CONFIG = { TMDB_API_KEY: 'YOUR_KEY_HERE' };
+
+For this static prototype the key is necessarily visible to visitors. Before a public production launch, move TMDB calls behind a serverless/API function if you want the credential kept off the client.
+
+## 2. Run
+For reliable API requests, serve the folder rather than double-clicking the HTML file. For example:
+
+    python3 -m http.server 8000
+
+Then visit http://localhost:8000
+
+GitHub Pages will also work for this prototype.
+
+## Douban behavior
+The site does **not** scrape or hotlink Douban. Cards open Douban's movie search using the movie title + year. This is more robust than trying to scrape Douban posters from a static browser app. Posters come from TMDB.
+
+## Next step
+Replace localStorage with Supabase so everyone sees the same suggestions and votes.
+
+
+## V1.2
+- TMDB API key configured.
+- Selecting a movie now also fetches its genres from TMDB.
+- Poster/title still link to a Douban movie search for a robust fallback.
+
+## Next: shared database
+To make submissions and votes sync across friends, create a Supabase project and provide the Project URL and anon/publishable key. Do not provide the service_role/secret key.
