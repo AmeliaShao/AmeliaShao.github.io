@@ -79,3 +79,12 @@ html{scroll-behavior:smooth}.top-nav{position:sticky;top:0;z-index:20;display:fl
 
 /* V3.1 weekly cycle + tonight's lineup */
 .lineup-card{border:1px solid var(--ink);padding:22px 24px;margin-bottom:34px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;background:#e7dfd0}.lineup-kicker{font-size:9px;letter-spacing:.14em;color:var(--accent);margin-bottom:8px}.lineup-main{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:baseline}.lineup-main strong{font-family:'Playfair Display',serif;font-size:28px}.lineup-item{font-size:11px}.lineup-note{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;margin:10px 0 0}.lineup-avatars{margin-top:12px;font-size:23px;letter-spacing:2px}.lineup-edit{background:transparent;color:var(--ink);border:1px solid var(--ink);white-space:nowrap}.lineup-edit:hover{background:var(--ink);color:var(--paper)}.waiting-badge{display:inline-block;margin:7px 0 2px;padding:4px 7px;border:1px solid var(--line);font-size:8px;letter-spacing:.08em;text-transform:uppercase}.waiting-badge.overdue{border-color:var(--accent);color:var(--accent)}.rollover-copy{font:13px/1.7 'DM Mono',monospace;margin:0 0 20px}.secondary-action{width:100%;margin-top:8px;background:transparent;color:var(--ink);border:1px solid var(--ink)}@media(max-width:650px){.lineup-card{grid-template-columns:1fr}.lineup-edit{width:100%}}
+
+
+/* V3.2 information hierarchy + larger navigation */
+.top-nav{gap:28px;padding-top:16px;padding-bottom:16px}
+.top-nav a{font-size:13px;letter-spacing:.1em;font-weight:500;padding:4px 0}
+.attendants-section{margin-top:0}
+.randomizer-section{margin-top:80px}
+#moviesSection{margin-top:80px}
+@media(max-width:600px){.top-nav{justify-content:flex-start;gap:20px;overflow-x:auto;padding-left:6vw;padding-right:6vw}.top-nav a{font-size:11px;white-space:nowrap}}
