@@ -4,8 +4,9 @@ const db=window.supabase?.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_KEY);
 const VOTER_KEY='fnf_voter_v2';
 let voterId=localStorage.getItem(VOTER_KEY);
 if(!voterId){voterId=crypto.randomUUID();localStorage.setItem(VOTER_KEY,voterId)}
-let movies=[], votes=[];
+let movies=[], votes=[], attendants=[];
 const grid=document.querySelector('#movies'),syncStatus=document.querySelector('#syncStatus');
+const attendantsGrid=document.querySelector('#attendants'),attendeeCount=document.querySelector('#attendeeCount');
 const doubanSearch=m=>`https://search.douban.com/movie/subject_search?search_text=${encodeURIComponent(`${m.title} ${m.release_year||''}`)}&cat=1002`;
 function esc(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function voteCount(id){return votes.filter(v=>v.movie_id===id).length}
@@ -18,7 +19,21 @@ function render(){
  document.querySelectorAll('.vote').forEach(b=>b.onclick=()=>castVote(b.dataset.id));
  document.querySelectorAll('.delete').forEach(b=>b.onclick=()=>removeMovie(b.dataset.id));
 }
-async function loadAll(show=true){if(!db){syncStatus.textContent='Supabase is not configured.';return}if(show)syncStatus.textContent='Syncing the ballot…';const [mr,vr]=await Promise.all([db.from('movies').select('*'),db.from('votes').select('*')]);if(mr.error||vr.error){syncStatus.textContent=`Database setup needed: ${(mr.error||vr.error).message}`;return}movies=mr.data||[];votes=vr.data||[];syncStatus.textContent='';render()}
+
+function renderAttendants(){
+ attendantsGrid.innerHTML='';
+ attendeeCount.textContent=`${attendants.length} coming`;
+ if(!attendants.length){attendantsGrid.innerHTML=`<div class="attendee-empty"><span>THE ROOM IS QUIET...</span><h3>Who's in?</h3><p>Claim a seat, pick an emoji, and leave a little note for the group.</p></div>`;return}
+ attendants.sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)).forEach(a=>{
+  const el=document.createElement('article');el.className='attendee';
+  el.innerHTML=`<div class="attendee-stack">${a.note?`<div class="floating-note">${esc(a.note)}</div>`:''}<div class="emoji-avatar">${esc(a.emoji)}</div></div><strong>${esc(a.name)}</strong><button class="leave" data-id="${a.id}" aria-label="Remove attendee">×</button>`;
+  attendantsGrid.appendChild(el);
+ });
+ document.querySelectorAll('.leave').forEach(b=>b.onclick=()=>removeAttendee(b.dataset.id));
+}
+async function removeAttendee(id){if(!confirm('Remove this person from the attendee list?'))return;const {error}=await db.from('attendants').delete().eq('id',id);if(error)alert(`Could not leave: ${error.message}`);await loadAll(false)}
+
+async function loadAll(show=true){if(!db){syncStatus.textContent='Supabase is not configured.';return}if(show)syncStatus.textContent='Syncing the ballot…';const [mr,vr,ar]=await Promise.all([db.from('movies').select('*'),db.from('votes').select('*'),db.from('attendants').select('*')]);if(mr.error||vr.error||ar.error){syncStatus.textContent=`Database setup needed: ${(mr.error||vr.error||ar.error).message}`;return}movies=mr.data||[];votes=vr.data||[];attendants=ar.data||[];syncStatus.textContent='';render();renderAttendants()}
 async function castVote(movieId){const {error}=await db.from('votes').insert({movie_id:movieId,voter_id:voterId});if(error){if(error.code==='23505')return;alert(`Vote failed: ${error.message}`)}await loadAll(false)}
 async function removeMovie(id){const m=movies.find(x=>x.id===id);if(!confirm(`Remove “${m?.title||'this movie'}” from this week's ballot?`))return;const {error}=await db.from('movies').delete().eq('id',id);if(error)alert(`Delete failed: ${error.message}`);await loadAll(false)}
 const now=new Date(),fri=new Date(now);fri.setDate(now.getDate()+((5-now.getDay()+7)%7));document.querySelector('#date').textContent=fri.toLocaleDateString('en-SG',{weekday:'long',day:'2-digit',month:'long'}).toUpperCase();
@@ -29,5 +44,16 @@ function resetSelection(){['tmdb_id','title','year','poster','genre'].forEach(n=
 async function findMovies(q){if(!apiKey){status.textContent='TMDB key missing.';return}status.textContent='Searching the projection booth…';try{const r=await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${encodeURIComponent(apiKey)}&query=${encodeURIComponent(q)}&include_adult=false&language=en-US`);if(!r.ok)throw new Error(`TMDB returned ${r.status}`);const data=await r.json();status.textContent=data.results.length?'Choose the right film:':'No films found.';results.innerHTML=data.results.slice(0,6).map(m=>{const poster=m.poster_path?`https://image.tmdb.org/t/p/w500${m.poster_path}`:'';const year=(m.release_date||'').slice(0,4);return `<button type="button" class="result" data-id="${m.id}" data-title="${esc(m.title)}" data-year="${year}" data-poster="${poster}">${poster?`<img src="${poster}" alt="">`:`<span class="mini-poster">?</span>`}<span><strong>${esc(m.title)}</strong><small>${year||'Year unknown'}${m.original_title!==m.title?` · ${esc(m.original_title)}`:''}</small></span></button>`}).join('');document.querySelectorAll('.result').forEach(b=>b.onclick=()=>selectMovie(b))}catch(e){status.textContent=`TMDB search error: ${e.message}`;results.innerHTML=''}}
 async function selectMovie(b){form.elements.tmdb_id.value=b.dataset.id;form.elements.title.value=b.dataset.title;form.elements.year.value=b.dataset.year;form.elements.poster.value=b.dataset.poster;search.value=`${b.dataset.title}${b.dataset.year?` (${b.dataset.year})`:''}`;results.innerHTML='';status.textContent='Loading movie details…';try{const r=await fetch(`https://api.themoviedb.org/3/movie/${b.dataset.id}?api_key=${encodeURIComponent(apiKey)}&language=en-US`);if(r.ok){const d=await r.json();form.elements.genre.value=(d.genres||[]).slice(0,3).map(g=>g.name).join(' · ')}}catch(e){}status.textContent='✓ Movie selected — poster & genres ready.'}
 form.onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);if(!f.get('title')){status.textContent='Please search and select a movie first.';return}const payload={tmdb_id:+f.get('tmdb_id'),title:f.get('title'),release_year:+f.get('year')||null,poster_url:f.get('poster'),genres:f.get('genre')||'Film',submitted_by:f.get('name'),reason:f.get('reason'),status:'candidate'};status.textContent='Adding to the shared ballot…';const {error}=await db.from('movies').insert(payload);if(error){status.textContent=error.code==='23505'?'That movie is already on this week’s ballot.':`Could not add movie: ${error.message}`;return}e.target.reset();results.innerHTML='';status.textContent='';modal.close();await loadAll(false)};
-if(db){db.channel('fnf-live').on('postgres_changes',{event:'*',schema:'public',table:'movies'},()=>loadAll(false)).on('postgres_changes',{event:'*',schema:'public',table:'votes'},()=>loadAll(false)).subscribe()}
+
+const attendeeModal=document.querySelector('#attendeeModal'),attendeeForm=document.querySelector('#attendeeForm');
+const emojis=['🍿','🎬','🐈','🦆','👽','😎','🫡','🥹','🤠','🦖','🐸','🧸','🍓','🌙','⭐','🪩'];
+const picker=document.querySelector('#emojiPicker');
+picker.innerHTML=emojis.map((e,i)=>`<button type="button" class="emoji-choice ${i===0?'selected':''}" data-emoji="${e}">${e}</button>`).join('');
+function chooseEmoji(e){attendeeForm.elements.emoji.value=e;document.querySelectorAll('.emoji-choice').forEach(b=>b.classList.toggle('selected',b.dataset.emoji===e));document.querySelector('.preview-emoji').textContent=e}
+document.querySelectorAll('.emoji-choice').forEach(b=>b.onclick=()=>chooseEmoji(b.dataset.emoji));
+document.querySelector('#openAttendee').onclick=()=>attendeeModal.showModal();document.querySelector('#closeAttendee').onclick=()=>attendeeModal.close();
+attendeeForm.elements.note.addEventListener('input',e=>{document.querySelector('.preview-note').textContent=e.target.value.trim()||'Your note floats here'});
+attendeeForm.onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const payload={name:f.get('attendee_name').trim(),emoji:f.get('emoji'),note:f.get('note').trim()||null};const {error}=await db.from('attendants').insert(payload);if(error){alert(`Could not join: ${error.message}`);return}e.target.reset();chooseEmoji('🍿');document.querySelector('.preview-note').textContent='Your note floats here';attendeeModal.close();await loadAll(false)};
+
+if(db){db.channel('fnf-live').on('postgres_changes',{event:'*',schema:'public',table:'movies'},()=>loadAll(false)).on('postgres_changes',{event:'*',schema:'public',table:'votes'},()=>loadAll(false)).on('postgres_changes',{event:'*',schema:'public',table:'attendants'},()=>loadAll(false)).subscribe()}
 loadAll();
