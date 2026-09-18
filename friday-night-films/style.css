@@ -141,3 +141,10 @@ html,body{max-width:100%;overflow-x:hidden}
 .lineup-pick span{display:block;font-size:8px;letter-spacing:.12em;color:var(--accent);margin-top:5px}
 .lineup-edit{min-width:220px}
 @media(max-width:850px){.lineup-card{grid-template-columns:1fr}.lineup-edit{width:100%;min-width:0}.lineup-pick{max-width:none}}
+
+
+/* V3.7 manual weekly rollover entry */
+.lineup-actions{display:grid;gap:8px;min-width:220px}
+.lineup-next{background:var(--accent);color:var(--paper);border:1px solid var(--accent);white-space:nowrap}
+.lineup-next:hover{background:var(--ink);border-color:var(--ink)}
+@media(max-width:850px){.lineup-actions{width:100%;min-width:0}.lineup-actions .lineup-edit,.lineup-actions .lineup-next{width:100%}}
