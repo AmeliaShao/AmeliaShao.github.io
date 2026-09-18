@@ -1,4 +1,4 @@
-const seed=[{title:'Perfect Days',year:2023,genre:'Drama',by:'Amelia',reason:'Quiet, beautiful, and exactly the Friday-night reset we need.',votes:3,poster:'',tmdb_id:976893},{title:'Chungking Express',year:1994,genre:'Drama · Romance',by:'Kevin',reason:'For the vibes. No further questions.',votes:2,poster:'',tmdb_id:11104},{title:'The Grand Budapest Hotel',year:2014,genre:'Comedy · Adventure',by:'Jess',reason:'Peak symmetry, tiny pastries, immaculate chaos.',votes:1,poster:'',tmdb_id:120467}];
+const seed=[{title:'Perfect Days',year:2023,genre:'Drama',by:'Amelia',reason:'Quiet, beautiful, and exactly the Friday-night reset we need.',votes:3,poster:'https://image.tmdb.org/t/p/w500/ugfH9TgSkk9hyKsJfO3UYpufJ0.jpg',tmdb_id:976893},{title:'Chungking Express',year:1994,genre:'Drama · Romance',by:'Kevin',reason:'For the vibes. No further questions.',votes:2,poster:'https://image.tmdb.org/t/p/w500/4sTjEAa4u1g7R0yR7qYV4Yd0Yg.jpg',tmdb_id:11104},{title:'The Grand Budapest Hotel',year:2014,genre:'Comedy · Adventure',by:'Jess',reason:'Peak symmetry, tiny pastries, immaculate chaos.',votes:1,poster:'https://image.tmdb.org/t/p/w500/eWdyYQreja6JGCzqHWXpWHDrrPo.jpg',tmdb_id:120467}];
 let movies=JSON.parse(localStorage.getItem('fnf_movies')||'null')||seed;
 const grid=document.querySelector('#movies');
 const apiKey=window.FNF_CONFIG?.TMDB_API_KEY||'';
@@ -25,7 +25,7 @@ async function hydrateMissingPosters(){
 }
 const now=new Date(),fri=new Date(now);fri.setDate(now.getDate()+((5-now.getDay()+7)%7));document.querySelector('#date').textContent=fri.toLocaleDateString('en-SG',{weekday:'long',day:'2-digit',month:'long'}).toUpperCase();
 const modal=document.querySelector('#modal'), form=document.querySelector('#form'), search=document.querySelector('#movieSearch'), results=document.querySelector('#results'), status=document.querySelector('#searchStatus');
-document.querySelector('#open').onclick=()=>modal.showModal();document.querySelector('#close').onclick=()=>modal.close();
+document.querySelector('#open').onclick=()=>modal.showModal();document.querySelector('#close').onclick=()=>modal.close();document.querySelector('#searchBtn').onclick=()=>{const q=search.value.trim();resetSelection();results.innerHTML='';if(q.length<2){status.textContent='Type at least 2 characters.';return;}findMovies(q)};
 let timer;
 search.addEventListener('input',()=>{clearTimeout(timer);resetSelection();const q=search.value.trim();if(q.length<2){results.innerHTML='';status.textContent='';return}timer=setTimeout(()=>findMovies(q),350)});
 function resetSelection(){['tmdb_id','title','year','poster','genre'].forEach(n=>{if(form.elements[n]) form.elements[n].value=''})}
