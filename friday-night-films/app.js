@@ -67,7 +67,28 @@ form.onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);if(!f.
 const archiveModal=document.querySelector('#archiveModal'),archiveForm=document.querySelector('#archiveForm');
 function openArchive(id){const m=movies.find(x=>x.id===id);if(!m)return;archiveForm.elements.movie_id.value=id;archiveForm.elements.watched_at.value=new Date().toISOString().slice(0,10);archiveForm.elements.archive_note.value='';document.querySelector('#archiveMovie').innerHTML=`${m.poster_url?`<img src="${esc(m.poster_url)}" alt="">`:''}<div><strong>${esc(m.title)}</strong><div class="muted">${esc(m.release_year||'')} · ${esc(m.genres||'Film')}</div></div>`;archiveModal.showModal()}
 document.querySelector('#closeArchive').onclick=()=>archiveModal.close();
-archiveForm.onsubmit=async e=>{e.preventDefault();const btn=e.target.querySelector('button[type=submit]');const oldText=btn.textContent;btn.disabled=true;btn.textContent='ARCHIVING…';const f=new FormData(e.target);const payload={status:'watched',watched_at:f.get('watched_at'),archive_note:f.get('archive_note').trim()||null};const {data,error}=await db.from('movies').update(payload).eq('id',f.get('movie_id')).select('id,status,watched_at').single();if(error){btn.disabled=false;btn.textContent=oldText;alert(`Could not archive: ${error.message}`);return}if(!data||data.status!=='watched'){btn.disabled=false;btn.textContent=oldText;alert('Archive did not save. Please run the V2.5 Supabase migration and try again.');return}archiveModal.close();await loadAll(false);document.querySelector('#archiveSection').scrollIntoView({behavior:'smooth'});btn.disabled=false;btn.textContent=oldText};
+async function submitArchive(e){
+  if(e) e.preventDefault();
+  const btn=document.querySelector('#archiveSubmit');
+  const movieId=archiveForm.elements.movie_id.value;
+  const watchedAt=archiveForm.elements.watched_at.value;
+  if(!movieId){ alert('No movie selected. Close this window and try Archive again.'); return; }
+  if(!watchedAt){ alert('Please choose the date you watched it.'); return; }
+  const oldText=btn.textContent; btn.disabled=true; btn.textContent='ARCHIVING…';
+  try{
+    const payload={status:'watched',watched_at:watchedAt,archive_note:archiveForm.elements.archive_note.value.trim()||null};
+    const {data,error}=await db.from('movies').update(payload).eq('id',movieId).select('id,status,watched_at');
+    if(error) throw error;
+    if(!data || !data.length || data[0].status!=='watched') throw new Error('Supabase did not return the updated movie. Make sure the V2.5 all-in-one migration has been run.');
+    archiveModal.close();
+    await loadAll(false);
+    document.querySelector('#archiveSection').scrollIntoView({behavior:'smooth'});
+  }catch(err){
+    alert('Could not archive: '+(err?.message||String(err)));
+  }finally{ btn.disabled=false; btn.textContent=oldText; }
+}
+archiveForm.addEventListener('submit',submitArchive);
+
 
 const rateModal=document.querySelector('#rateModal'),rateForm=document.querySelector('#rateForm'),personalPicker=document.querySelector('#personalRatingPicker');
 personalPicker.innerHTML=[1,2,3,4,5].map(n=>`<button type="button" class="rating-choice" data-personal-rating="${n}">★</button>`).join('');
