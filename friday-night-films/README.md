@@ -1,42 +1,23 @@
-# Friday Night Films — V1.1
+# Friday Night Films V2 — shared Supabase edition
 
-A tiny movie-night ballot for friends.
+## 1. Create the database tables
+Open your Supabase project → **SQL Editor** → **New query**. Paste the complete contents of `supabase-schema.sql`, then click **Run**.
 
-## What's new
-- Search movies while suggesting a film.
-- TMDB automatically supplies poster, title and year.
-- Click any poster/title to open a Douban movie search for that film.
-- Voting and submissions still persist locally in the browser for this prototype.
+This creates `movies` and `votes`, enables Row Level Security, and enables realtime updates.
 
-## 1. Get a free TMDB API key
-Create/log into a TMDB account, go to Account Settings > API, request an API key, then copy the **v3 API Key**.
+## 2. Publish to GitHub Pages
+Replace the old site files in your GitHub repository with all files from this folder:
+- `index.html`
+- `style.css`
+- `app.js`
+- `config.js`
 
-Open `config.js` and paste it here:
+`supabase-schema.sql` and this README do not need to be hosted, though it is fine if they are.
 
-    window.FNF_CONFIG = { TMDB_API_KEY: 'YOUR_KEY_HERE' };
+## 3. Test
+Open the site in two different browsers/devices. Add a movie on one. It should appear on the other; votes should sync too.
 
-For this static prototype the key is necessarily visible to visitors. Before a public production launch, move TMDB calls behind a serverless/API function if you want the credential kept off the client.
+## Security note
+The Supabase publishable key in `config.js` is intended to be public. Access is controlled by RLS policies. This V2 is deliberately a low-friction friend-group site: anyone with the URL can nominate, vote, and delete nominations. Add authentication before using it as a public site.
 
-## 2. Run
-For reliable API requests, serve the folder rather than double-clicking the HTML file. For example:
-
-    python3 -m http.server 8000
-
-Then visit http://localhost:8000
-
-GitHub Pages will also work for this prototype.
-
-## Douban behavior
-The site does **not** scrape or hotlink Douban. Cards open Douban's movie search using the movie title + year. This is more robust than trying to scrape Douban posters from a static browser app. Posters come from TMDB.
-
-## Next step
-Replace localStorage with Supabase so everyone sees the same suggestions and votes.
-
-
-## V1.2
-- TMDB API key configured.
-- Selecting a movie now also fetches its genres from TMDB.
-- Poster/title still link to a Douban movie search for a robust fallback.
-
-## Next: shared database
-To make submissions and votes sync across friends, create a Supabase project and provide the Project URL and anon/publishable key. Do not provide the service_role/secret key.
+The TMDB API key is also visible because GitHub Pages is static. For a public/high-traffic deployment, move TMDB calls behind a serverless function.
