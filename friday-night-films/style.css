@@ -58,3 +58,14 @@ html{scroll-behavior:smooth}.top-nav{position:sticky;top:0;z-index:20;display:fl
   opacity: 1;
   transform: translateY(-1px);
 }
+
+/* V2.8: visible review CTA + clean candidate discussion */
+.rate-action{display:block!important;visibility:visible!important;opacity:1!important;color:#111!important;background:transparent!important;border:1px solid #111!important}
+.rate-action:hover,.rate-action:focus-visible{background:#111!important;color:#f4f0e8!important}
+.movie-actions{display:flex;gap:8px;align-items:stretch;margin-top:auto}
+.movie-actions .vote{flex:1;margin-top:0}
+.comment-action{flex:0 0 auto;border:1px solid #111;background:transparent;color:#111;padding:10px 12px;font:500 11px 'DM Mono',monospace;cursor:pointer}
+.comment-action:hover{background:#111;color:#f4f0e8}
+.comment-thread{max-height:280px;overflow:auto;border-top:1px solid #bbb;border-bottom:1px solid #bbb;margin:18px 0;padding:8px 0}
+.thread-comment{display:flex;gap:10px;padding:11px 2px;border-bottom:1px solid rgba(0,0,0,.1)}
+.thread-comment:last-child{border-bottom:0}.thread-comment>span{font-size:22px}.thread-comment b{font:600 11px 'DM Mono',monospace;text-transform:uppercase}.thread-comment p{margin:4px 0 0;font:14px/1.45 'DM Mono',monospace}.thread-empty{padding:24px 4px;opacity:.55;font:12px 'DM Mono',monospace}.mini-review{margin-top:9px;padding-top:8px;border-top:1px solid rgba(0,0,0,.12);font:11px/1.5 'DM Mono',monospace}.mini-review b{display:block;margin-bottom:2px;text-transform:uppercase;font-size:10px}
