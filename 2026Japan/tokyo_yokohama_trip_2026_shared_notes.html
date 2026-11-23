@@ -61,7 +61,7 @@ function noteStatus(day,msg){const el=document.querySelector(`[data-note-status=
 async function notesRequest(path,options={}){
  const response=await fetch(NOTES_URL+'/rest/v1/'+path,{...options,headers:{...notesHeaders,...(options.headers||{})}});
  if(!response.ok)throw Error('HTTP '+response.status+' '+(await response.text()).slice(0,150));
- return response.status===204?null:response.json();
+ const body=await response.text();return body?JSON.parse(body):null;
 }
 async function loadSharedNotes(){
  if(noteBusy)return;
@@ -70,7 +70,7 @@ async function loadSharedNotes(){
   for(const day of days.map(x=>x.d)){
    const list=document.querySelector(`[data-note-list="${day}"]`);
    if(!list)continue;
-   const dayRows=rows.filter(r=>r.day===day);
+   const dayRows=rows.filter(r=>Number(r.day)===Number(day));
    list.innerHTML=dayRows.map(r=>`<div class="note-item"><div class="note-head"><strong>${notesEscape(r.author)}</strong><span>${new Date(r.created_at).toLocaleString('zh-CN',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span></div><p>${notesEscape(r.content)}</p></div>`).join('');
    noteStatus(day,'已同步');
   }
@@ -85,10 +85,10 @@ for(const d of days){
   const content=draft.value.trim();if(!content||noteBusy)return;
   noteBusy=true;button.disabled=true;noteStatus(day,'保存中…');
   try{
-   await notesRequest('trip_notes',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({day,author:author.value,content})});
+   await notesRequest('trip_notes',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({day:String(Number(day)),author:author.value,content})});
    draft.value='';try{localStorage.removeItem(noteDraftPrefix+day)}catch(e){}
    noteStatus(day,'已保存');
-  }catch(e){noteStatus(day,'保存失败，可重试');console.warn(e.message)}
+  }catch(e){noteStatus(day,'保存失败：'+e.message.slice(0,120));console.warn(e.message)}
   finally{noteBusy=false;button.disabled=false;await loadSharedNotes()}
  });
 }
